@@ -1,0 +1,75 @@
+/* Glavni kontejner stranice */
+.o-nama-stranica {
+    background-color: #fcf8f5; 
+    min-height: 100vh;
+    width: 100%;
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+/* Stil za "NASA PRIČA" i zvezdu */
+.subtitle {
+    color: #eecf6d !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+/* Zvezda */
+.single-star {
+    font-size: 1.3rem !important; 
+    color: #eecf6d !important;
+}
+
+/* Glavni naslov "O nama" */
+.main-title {
+    color: #3e2723 !important; 
+    font-family: "Georgia", serif !important;
+    font-size: 3.5rem;
+    font-weight: 400;
+    margin-top: 10px;
+}
+
+/* Beli boks sa tekstom */
+.about-card {
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+}
+
+/* Podesavanja teksta */
+.about-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: grey;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.font-serif {
+    font-family: "Georgia", serif !important;
+}
+
+/* Potpis na dnu */
+.with-love {
+    color: #8B3A45 !important; 
+    font-style: italic;
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+}
+
+.artist-name {
+    font-weight: 700;
+    color: #3e2723;
+}
+
+.footer-sparkle {
+    color: #eecf6d;
+    font-size: 1.1rem;
+    margin-top: 15px;
+}

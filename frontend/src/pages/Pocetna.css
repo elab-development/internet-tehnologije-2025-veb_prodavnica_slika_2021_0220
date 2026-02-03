@@ -1,0 +1,347 @@
+/* hero-section */
+
+.pocetna {
+  min-height: 100vh; /* Da zauzme ceo ekran */
+  width: 100%;
+  position: relative;
+  /* Slika se postavlja kao pozadina */
+  background-image: url('../assets/hero-gallery.jpg'); 
+  /* background-size: 100% 60%; */
+  background-size: cover;
+  background-position: center ;
+  overflow: hidden;
+  background-repeat: no-repeat;
+
+  background-color: #dfcf8f;       /* fallback boja dok se slika učitava */
+
+}
+
+/* Ovo dodaje beli sloj preko slike da bi tekst bio citljiviji, 
+   ali samo sa leve strane (kao gradient) */
+.pocetna::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Gradient od bele ka providnoj, da tekst "iskoči" */
+  background: linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 40%, rgba(255,255,255,0) 100%);
+  z-index: 1;
+}
+
+/* Sadržaj mora biti iznad tog belog sloja */
+.container-fluid {
+  position: relative;
+  z-index: 999;
+}
+
+/* Fontovi i boje */
+.font-serif {
+  font-family: "Georgia", serif; 
+}
+
+.text-custom-black{
+  font-weight: 600;
+  font-size: 3rem;
+  color: rgba(0, 0, 0, 0.742);
+}
+.text-custom-red {
+  color: #8B3A45;
+  font-weight: 600;
+  font-size: 3rem;
+}
+
+.original{
+    /* color: #e1c212; */
+    /* color: #d5b810; */
+    color: #bfa35f;
+    margin-bottom: 2rem;
+}
+
+.small-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.text-muted{
+    font-size: 1.1rem;
+    font-weight: 500;
+    /* color: rgba(0, 0, 0, 0.03); */
+}
+
+/* Dugmad */
+.btn-custom-red {
+  background-color: #8B3A45;
+  border: 1px solid #8B3A45;
+  color: white;
+  padding: 10px 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-custom-red:hover {
+  background-color: #6d2e36;
+  color: white;
+}
+
+.btn-outline-custom-gold {
+  color: #bfa35f;
+  border: 2px solid #bfa35f;
+  background-color: transparent;
+  padding: 10px 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-custom-red,
+.btn-outline-custom-gold {
+  text-decoration: none;        /* uklanja podvlačenje */
+}
+
+
+.btn-outline-custom-gold:hover {
+  background-color: #bfa35f;
+  color: white;
+}
+
+@media (max-width:770px) {
+
+    .original{
+        color: #8B3A45;
+        margin-bottom: 1rem;
+    }
+
+    .btn-outline-custom-gold {
+    color: #8B3A45;
+    border: 2px solid #8B3A45;
+    }
+
+    .btn-outline-custom-gold:hover {
+    background-color: #8B3A45;
+    color: white;
+    }
+}
+
+
+
+
+
+/* member banner */
+
+.member-banner {
+  background-color: #8B3A45; /* Tvoja custom crvena */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1000; /* Da bude iznad svega ako zatreba */
+}
+
+/* Stil za ikonicu poklona u krugu */
+.icon-circle {
+  background-color: rgba(191, 163, 95, 0.2); /* Prozirna zlatna */
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #eecf6d;
+}
+
+.text-custom-gold {
+  color: #eecf6d;
+}
+/* eecf6d bfa35f*/
+/* Žuti krug za popust */
+.discount-circle {
+  background-color: #eecf6d; /* Svetlija nijansa zlatne kao na slici */
+  /* ili koristi tvoju #bfa35f ako želiš tamniju */
+  color: #3e1b20; /* Tamna boja teksta unutar kruga */
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  flex-shrink: 0; /* Da se ne spljeska */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  gap: 0.15rem;
+}
+
+.discount-circle span{
+  margin: 0;
+  line-height: 1.1;
+}
+
+.procenat{
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.procenat-popusta{
+  font-size: 2rem;
+  font-weight: 500;
+}
+.off{
+  text-transform: uppercase;
+}
+
+/* Specifično dugme za baner */
+.btn-outline-white {
+  color: white;
+  border: 2px solid rgba(255,255,255, 0.6);
+  text-decoration: none;
+  background: transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-outline-white:hover {
+  background-color: white;
+  color: #8B3A45;
+  border-color: white;
+}
+
+/* Responsivnost za baner */
+@media (max-width: 768px) {
+  .member-banner {
+    text-align: center;
+  }
+  
+  .member-banner .d-flex.gap-2 {
+    justify-content: center; /* Centrira ikonicu i tekst na mobilnom */
+  }
+
+  .member-banner p {
+    margin: 0 auto; /* Centrira paragraf */
+  }
+}
+
+.no-wrap {
+  white-space: nowrap;
+  overflow: hidden;           /* sprečava da tekst "izleti" van kontejnera */
+  text-overflow: ellipsis;    /* prikaže ... ako nema mesta */
+}
+
+.postanite-clan{
+  max-width: 600px;
+}
+
+@media (min-width: 990px) {
+  .pridruzite-se{
+    max-width: 500px;
+  }
+}
+
+
+
+
+
+/* Shop with Confidence */
+
+/* Pozadina sekcije - nežna bež nijansa kao na slici */
+.confidence-section {
+  background-color: #fbf9f6; 
+}
+
+/* Zlatni podnaslov */
+.confidence-subtitle {
+  color: #cda274; /* Zlatna nijansa */
+  font-weight: 500;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+/* Glavni naslov */
+.confidence-title {
+  color: #3e3232; /* Tamno braon */
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* --- Stilovi za Karticu --- */
+
+.feature-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem 1.5rem;
+  /* Blaga senka u stanju mirovanja */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default; /* Ili pointer ako je link */
+}
+
+/* Hover na celu karticu (blago podizanje) */
+.feature-card:hover {
+  /* transform: translateY(-5px); */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Krug i Animacija --- */
+
+.feature-card .icon-wrapper {
+  width: 70px;
+  height: 70px;
+  background-color: #f4ede6; /* Svetlo braon/bež krug */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  
+  /* Tranzicija za animaciju kruga */
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s ease;
+}
+
+/* Stil za samu ikonicu */
+.feature-card .icon-svg-container {
+  color: #802e3b; /* Bordo boja ikonice u startu */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* KLJUČNO: Tranzicija za promenu boje */
+  transition: color 0.3s ease;
+}
+
+/* --- HOVER EFEKTI --- */
+
+/* Kada se pređe preko kartice, krug se uvećava */
+.feature-card:hover .icon-wrapper {
+  transform: scale(1.1); /* Uvećanje za 15% */
+  /* background-color: #802e3b;  */
+}
+
+/* Kada se pređe preko kartice, ikonica menja boju */
+.feature-card:hover .icon-svg-container {
+  color: #cda274; /* Menja se u zlatnu boju */
+  /* Ili ako želiš da bude tamnija: color: #292929; */
+}
+
+/* --- Tekstovi na kartici --- */
+.feature-card .feature-title {
+  font-family: serif; 
+  font-weight: 700;
+  color: #3e3232;
+  font-size: 1.15rem;
+}
+
+.feature-card .feature-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #777;
+}
+
+
+
+
+/* --- SEKCIJA NOVIH SLIKA (New Arrivals) --- */
+.latest-paintings-section {
+  background-color: #fcf8f5; /* Svetla bež pozadina sa slike */
+}
+
+.sub-title {
+  color: #d4af37; /* Zlatna boja za "New Arrivals" */
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+.section-title {
+  color: #3e2723; /* Tamno braon */
+  font-family: serif; /* Serif font kao na slici */
+}
+

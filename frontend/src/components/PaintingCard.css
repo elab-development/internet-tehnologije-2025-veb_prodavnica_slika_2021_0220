@@ -1,0 +1,136 @@
+/* --- KARTICA SLIKE (Card Styling) --- */
+.painting-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.painting-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-wrapper {
+  height: 250px;
+  overflow: hidden;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.painting-card:hover .card-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.painting-title {
+  font-family: serif;
+  font-size: 1.25rem;
+  color: #3e2723;
+  margin-bottom: 0.5rem;
+}
+
+.painting-type {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.card-footer-custom {
+  margin-top: auto; /* Gura cenu i dugmad na dno */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #8B3A45; 
+}
+
+/* Dugmad na kartici */
+.btn-add-cart {
+  background: transparent;
+  border: 1px solid #8B3A45;
+  color: #8B3A45;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-add-cart:hover:not(:disabled) { /* :not(:disabled) znaci primeni ako nije disabled */
+  background-color: #8B3A45;
+  color: white;
+}
+
+.btn-add-cart:disabled {
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  background: #f0f0f0;
+}
+
+.btn-view-cart {
+  background: #2e7d32; /* Zelena za uspeh */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.btn-view-cart:hover{
+    color: white;
+    background: #1b5e20;
+}
+
+/* Dugme "View All Paintings" */
+.btn-gold-filled {
+  background-color: #e0bb40;
+  color: #3e2723;
+  font-weight: 600;
+  padding: 12px 30px;
+  border-radius: 8px;
+  border: none;
+  transition: background 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-gold-filled:hover {
+  background-color: #cca32a;
+  color: #2d1b18;
+}
+
+
+
+
+
+
+
+
+

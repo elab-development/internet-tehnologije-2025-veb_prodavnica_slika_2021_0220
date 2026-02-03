@@ -1,0 +1,154 @@
+/* Overlay i kontejner */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.auth-modal {
+  width: 420px;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  max-height: 98vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header sekcija */
+.auth-header {
+  background: linear-gradient(135deg, #8d3c4a, #b15c6a);
+  color: #fff;
+  padding: 15px 20px;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-header h3 { margin: 0 0 5px; font-size: 1.2rem; }
+.auth-header p { margin: 0; font-size: 0.9rem; }
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  
+  width: 2rem;
+  height: 2rem;
+}
+
+.close-btn:hover{
+  border-radius: 50%;
+  background-color: rgba(141, 60, 74, 0.292);
+}
+
+
+/* Body i Inputi */
+.auth-body {
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+  display: block;
+  color: #555;
+}
+
+.input-group {
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f4f1;
+  padding: 8px 12px;
+  border-radius: 8px;
+
+}
+
+.input-group input {
+
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+}
+
+/* Dugme i Linkovi */
+.auth-btn {
+  background: #9a4353;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 25px;
+  margin-top: 5px;
+  cursor: pointer;
+  transform: background 0.3s;
+}
+
+.auth-btn:hover{
+  background: #8d3f4d;
+}
+
+.switch span {
+  color: #9a4353;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.switch{
+  margin-bottom: -0.2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Efekti */
+/* .page-blur {
+  filter: blur(4px);
+  pointer-events: none;
+} */
+
+
+.obavestenje{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #f8f4f1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.info{
+  border: 2px solid rgb(66, 241, 50);
+  color: rgb(66, 241, 50);
+  background-color: rgba(66, 241, 50, 0.148);
+}
+
+ .error{
+  border: 2px solid rgb(208, 9, 9);
+  color: rgb(208, 9, 9);
+  background-color: rgba(208, 9, 9, 0.171);
+}
+
+
+.eye-btn{
+  border: none;
+  background: none;
+  margin-right: -0.4rem;
+}

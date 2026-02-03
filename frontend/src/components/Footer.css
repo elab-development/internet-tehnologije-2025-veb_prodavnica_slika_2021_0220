@@ -1,0 +1,168 @@
+.footer-section {
+  /* background: rgb(65, 22, 31); */
+  background: #5a1f2b;
+  color: rgb(225, 213, 216); 
+  font-family: 'Arial', sans-serif;
+  border-top: 1px solid #f0f0f0;
+}
+
+.footer-title {
+  color: #e3c725;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.title-underline {
+  width: 4rem;
+  height: 2px;
+  background-color: rgb(225, 213, 216); 
+  margin-bottom: 25px;
+}
+
+/* Kontakt informacije i linkovi */
+.contact-info li, 
+.footer-links li {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Default za mobilne */
+}
+
+@media (min-width: 992px) {
+  .contact-info li, 
+  .footer-column:last-child .footer-links li {
+    justify-content: flex-start; /*  Poravnaj levo na desktopu */
+  }
+
+  .scroll-to-top-simple {
+    margin-top: 1.5rem;      /* isto kao mt-4 */
+    margin-left: 6.5rem;       /* gura je desno u koloni */
+  }
+}
+
+.footer-icon {
+  margin-right: 15px;
+  color: rgb(225, 213, 216); 
+  min-width: 20px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: rgb(225, 213, 216); 
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #e3c725; /* Žuta boja pri hoveru */
+}
+
+/* Stil za kvadratne ikonice */
+.social-square {
+  width: 40px;            /* Širina kvadrata */
+  height: 40px;           /* Visina kvadrata */
+  border: 1px solid #e3c725; /* Tanka zlatna ivica (prilagodi boju svom logou) */
+  border-radius: 8px;
+  color: #e3c725;         /* Boja same ikonice */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease; /* Lepa animacija */
+  background-color: transparent; /* Providna pozadina */
+}
+
+/* Efekat na hover (kad pređeš mišem) */
+.social-square:hover {
+  background-color: #c5a059; /* Kvadrat postaje zlatan */
+  color: #ffffff;            /* Ikonica postaje bela */
+  border-color: #c5a059;
+  transform: translateY(-2px); 
+}
+
+/* Donji deo */
+.footer-bottom {
+  border-color: #f0f0f0 !important;
+}
+
+.logo-dany { font-weight: bold; font-size: 1.5rem; color: #e3c725; }
+.logo-art { font-weight: bold; font-size: 1.5rem; color: #e3c725; }
+
+.copyright-text {
+  font-size: 14px;
+  color: rgb(225, 213, 216); 
+}
+
+/* Responsive fix za kolone na mobilnom */
+@media (max-width: 991px) {
+  .footer-column {
+    text-align: center;
+  }
+  .title-underline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .scroll-to-top-simple {
+    margin: 2rem auto 0;   /* centar + razmak odozgo */
+  }
+}
+
+
+
+
+
+.scroll-to-top-simple {
+  /* position: absolute;
+  bottom: 20px;   Razmak od dna
+  right: 20px;    Razmak od desne ivice */
+  position: static;
+  right: 1rem;
+  bottom: 0.7rem;
+  width: 40px;
+  height: 40px;
+  /* margin-top: 1.7rem; */
+  /* margin-left: 6.5rem; */
+  
+  /* Stil kao tvoj Instagram kvadrat */
+  border: 1px solid #e3c725;/* Zlatna boja tvojih ikonica */
+  border-radius: 8px;
+  background-color: transparent;
+  color: #e3c725;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* Efekat kada se pređe mišem - puni se zlatnom bojom */
+.scroll-to-top-simple:hover {
+  background-color: #c5a059;
+  color: #ffffff;
+  border-color: #c5a059;
+  transform: translateY(-2px); /* Malo se podigne */
+}
+
+
+
+
+
+
+
+
+
+
+
+.footer-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.footer-section.fade-up {
+  opacity: 1;
+  transform: translateY(0);
+}

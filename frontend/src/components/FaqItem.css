@@ -1,0 +1,87 @@
+/* FAQ SEKCIJA DIZAJN */
+
+/* Pozadina cele sekcije (svetla bež boja kao na slici) */
+.faq-section {
+  background-color: #f4f1ec; 
+}
+
+/* Boje teksta */
+.text-custom-gold-dark {
+  color: #c5a059;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.text-custom-brown {
+  color: #3e2b26; /* Tamno braon za naslov */
+}
+
+/* Kartica pitanja */
+.faq-card {
+  background-color: #fff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* Vrlo blaga senka */
+  border: 1px solid rgba(0,0,0,0.04);
+  overflow: hidden; /* Bitno za animaciju zatvaranja */
+}
+
+.faq-card:hover {
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+/* Tekst pitanja */
+.question-text {
+  color: #5a423d;
+  font-size: 1.15rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.faq-card:hover .faq-header .question-text,
+.faq-card:hover .faq-header .faq-icon
+{
+  color: #8B3A45;
+}
+
+/* Kada je kartica aktivna (otvorena) */
+.faq-card.active .question-text,
+.faq-card.active .faq-icon
+{
+  color: #8B3A45; /* Ona tvoja crvena boja kad je aktivno */
+}
+
+/* Ikonica strelice */
+.faq-icon {
+  color: #5a423d;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+/* Animacija i stil odgovora */
+.faq-body {
+  max-height: 0;
+  opacity: 0;   /* potpuno providan */
+  transition: max-height 0.4s ease-out, opacity 0.3s ease;
+}
+
+/* Kada se doda klasa 'active' u Reactu */
+.faq-card.active .faq-body {
+  max-height: 200px; /* Dovoljno visine da stane tekst */
+  opacity: 1;   /* ni malo providan */
+}
+
+/* Kada je kartica aktivna, rotiraj strelicu */
+.faq-card.active .faq-icon {
+  /* -180deg rotira suprotno od kazaljke na satu. 
+     A u smeru suprotnom od kazaljke, samo -180deg */
+  transform: rotate(180deg); 
+}
+
+.faq-body .text-muted {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #6c757d;
+}
+

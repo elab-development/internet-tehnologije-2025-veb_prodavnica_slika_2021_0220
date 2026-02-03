@@ -1,0 +1,184 @@
+
+/* custom.css */
+
+/* kožna / bež */
+.navbar {
+  /* background-color: rgb(177, 137, 145);  */
+  /* background-color: rgb(251, 233, 229); */
+  /* background-color: rgb(255, 243, 240); */
+  background-color: rgb(255, 247, 246);
+  /* z-index: 1000; */
+  box-shadow:
+    0 6px 10px rgba(0, 0, 0, 0.087);
+    /* 0 10px 20px rgba(0, 0, 0, 0.082); */
+
+  /* transition: box-shadow 0.3s ease; */
+}
+
+
+.navbar-nav .nav-link {
+  color: #41161f;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link:hover{
+  color: #e3c725;
+}
+
+.navbar-nav .nav-link.active{
+    color: #e3c725 !important;
+}
+
+
+
+
+
+
+.cart-fixed {
+  position: absolute;       /* BITNO */
+  right: 0;                 /* skroz uz ivicu */
+  transform: translateY(-50%);
+  margin-right: 1.8rem;       /* malo razmaka od ivice */
+
+  color: #e3c725;
+  cursor: pointer;
+}
+
+
+
+
+
+
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler:focus-visible {
+  outline: none;
+  box-shadow: none !important;
+  color: #41161f;
+  /* color: #5a1f2b; */
+}
+
+.navbar-toggler{
+    margin-left: -0.4rem;
+}
+
+
+
+.logo{
+    font-size: 4rem;
+}
+
+.dany{
+    font-size: 2.4rem;
+    color: #e3c725;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.art{
+    font-size: 2.4rem;
+    color: #41161f;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+
+
+
+.custom-navbar .navbar-brand {
+  padding: 0;              /* ključno */
+  margin-left: 0.5rem;      
+  line-height: 1;          /* da ne raste visina */
+}
+
+.custom-navbar .korpa-kontejner{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* KRUŽIĆ */
+.cart-badge {
+  position: absolute;   /* preduslov je position:!static -> top,right su pomeraji u odnosu na elementovu trenutnu poziciju bez da diraju ostale elemente, margin-top je pomerj u odnosu na marginu i gura ostale elemente */
+  top: -0.45rem;
+  right: -0.5rem;
+
+  min-width: 1.1rem;
+  height: 1.1rem;
+
+  background-color: #41161f; /* bordo – uklopi sa brendom */
+  color: rgb(225, 213, 216); 
+
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+
+
+
+
+
+
+.header{
+  /* background: #41161f; */
+  background: #5a1f2b;
+  color: rgb(225, 213, 216); 
+  font-size: 90%;
+}
+
+.header .header-link{
+  
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 8px;
+  border: 1px solid rgba(227, 198, 37, 0);
+}
+
+.header .reg{
+  border-radius: 8px;
+  border: 1px solid rgb(255, 255, 255);
+}
+
+.header .header-link:hover{
+  color: #e3c725;
+  border-radius: 8px;
+  border: 1px solid rgb(227, 199, 37);
+}
+
+.header .reg:hover{
+  background-color: #c5a059; 
+  color: rgb(255, 255, 255);           
+  border-color: #c5a059;
+}
+
+
+
+.mobile-menu{
+  max-height: 0px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.mobile-menu.show{
+  max-height: 500px;
+  opacity: 1;
+}
+
+

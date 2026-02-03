@@ -1,0 +1,355 @@
+/* Stil za naslov stranice */
+
+.pozadina{
+    background-color: #f8ead6;
+}
+
+.page-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 2rem;
+    /* color: #4a4a4a; */
+    color: #3e3232; /* Tamno braon */
+    font-weight: 600;
+}
+
+/* Stil za pojedinacnu stavku (Reusable komponenta) */
+.cart-item-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 1.5rem; 
+    min-height: 200px; 
+    display: flex;
+    align-items: center;
+    transition: box-shadow 0.3s ease;
+}
+
+
+.kanta-cena {
+  display: flex;
+  flex-direction: column;
+  gap: 6.3rem;
+
+}
+
+.kanta-cena span {
+    white-space: nowrap; /* Sprečava prelamanje cene u novi red */
+    /* display: block; */
+}
+
+
+
+.opis-slike{
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cart-item-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.cart-item-img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+@media (max-width:535px) {
+  .cart-item-img {
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+      padding-right: 0.5rem;
+  }
+
+  .kanta-cena {
+    display: flex;
+    flex-direction: column;
+    gap: 5.3rem;
+
+  }
+/* 
+  .kanta-cena span {
+    font-size: 0.85rem !important;
+  } */
+}
+
+@media (max-width:390px) {
+  .opis-slike{
+    opacity: 0;
+  }
+  .cart-item-img {
+      padding-right: 0rem;
+  }
+  
+  
+}
+
+/* Dugme za brisanje (kanta) */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.delete-btn:hover {
+    color: #dc3545; /* Crvena boja na hover */
+}
+
+/* Order Summary kartica */
+.order-summary-card {
+    background: #f9f9f9;
+    border: none;
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+/* Dugme za povratak u galeriju */
+.btn-back-gallery {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.7rem;
+    padding: 10px 20px;
+    border: 1.5px solid #5555555d;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    /* background-color: white; */
+}
+
+@media (min-width:990px) {
+    .btn-back-gallery {
+        gap: 7px;
+    }
+}
+
+@media (max-width:766px){
+    .ostatak-ponude{
+        display: none;
+    }
+}
+
+.btn-back-gallery:hover {
+    background-color: #8B3A45;
+    color: white;
+    border: 1.5px solid #55555500;
+}
+
+
+
+
+
+
+/* --- EMPTY CART STATE --- */
+.empty-cart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    animation: fadeIn 0.8s ease;
+}
+
+/* Krug oko ikonice */
+.empty-cart-icon-wrapper {
+    background-color: #f0ebe5; /* Bež boja iz primera */
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.empty-cart-icon {
+    color: #5d4037; /* Tamno braon boja ikonice */
+}
+
+/* Tipografija */
+.empty-cart-title {
+    font-family: "Playfair Display", serif; /* Serif font */
+    color: #3e2723;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.empty-cart-text {
+    color: #795548;
+    max-width: 500px;
+    margin: 0 auto 2.5rem auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Dugme Explore Gallery */
+.btn-explore-gallery {
+    background-color: #8B3A45;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    border: none;
+    box-shadow: 0 4px 10px rgba(158, 95, 95, 0.3);
+    /* transition: transform 0.3s ease; */
+    transition: all 0.3s ease;
+  }
+
+.btn-explore-gallery:hover {
+    background-color: #80363f;
+    color: white;
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(158, 95, 95, 0.4);
+}
+
+/* --- BANER ZA CLANOVE (CART VERZIJA) --- */
+/* Koristimo drugu boju pozadine u odnosu na Pocetnu */
+.member-banner-cart {
+    background-color: #8B3A45; /* Tvoja custom crvena */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1000; /* Da bude iznad svega ako zatreba */
+    border-radius: 12px;
+}
+
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* member banner-cart */
+
+
+
+/* Stil za ikonicu poklona u krugu */
+.icon-circle {
+  background-color: rgba(191, 163, 95, 0.2); /* Prozirna zlatna */
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #eecf6d;
+}
+
+.text-custom-gold {
+  color: #eecf6d;
+}
+/* eecf6d bfa35f*/
+/* Žuti krug za popust */
+.discount-circle {
+  background-color: #eecf6d; /* Svetlija nijansa zlatne kao na slici */
+  /* ili koristi tvoju #bfa35f ako želiš tamniju */
+  color: #3e1b20; /* Tamna boja teksta unutar kruga */
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  flex-shrink: 0; /* Da se ne spljeska */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  gap: 0.15rem;
+}
+
+.discount-circle span{
+  margin: 0;
+  line-height: 1.1;
+}
+
+.procenat{
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.procenat-popusta{
+  font-size: 2rem;
+  font-weight: 500;
+}
+.off{
+  text-transform: uppercase;
+}
+
+/* Specifično dugme za baner */
+.btn-outline-white {
+  color: white;
+  border: 2px solid rgba(255,255,255, 0.6);
+  text-decoration: none;
+  background: transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-outline-white:hover {
+  background-color: white;
+  color: #8B3A45;
+  border-color: white;
+}
+
+/* Responsivnost za baner */
+@media (max-width: 768px) {
+  .member-banner-cart {
+    text-align: center;
+  }
+  
+  .member-banner-cart .d-flex.gap-2 {
+    justify-content: center; /* Centrira ikonicu i tekst na mobilnom */
+  }
+
+  .member-banner-cart p {
+    margin: 0 auto; /* Centrira paragraf */
+  }
+}
+
+.no-wrap {
+  white-space: nowrap;
+  overflow: hidden;           /* sprečava da tekst "izleti" van kontejnera */
+  text-overflow: ellipsis;    /* prikaže ... ako nema mesta */
+}
+
+.postanite-clan{
+  max-width: 600px;
+}
+
+@media (min-width: 990px) {
+  .pridruzite-se{
+    max-width: 500px;
+  }
+}
+
+.unesi-podatke{
+  background-color: #6c1818;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.unesi-podatke:hover{
+  background-color: #5a1414;
+  transform: scale(1.01);
+}
