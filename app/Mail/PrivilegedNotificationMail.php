@@ -40,7 +40,7 @@ class PrivilegedNotificationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'notify-privileged',
+            markdown: 'emails.notify-privileged',
         );
     }
 

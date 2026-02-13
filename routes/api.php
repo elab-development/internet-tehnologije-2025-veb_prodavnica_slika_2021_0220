@@ -39,9 +39,12 @@ Route::get('/verify/email/{id}',[EmailVerificationController::class,'verify'])
 Route::post('/login', [LoginController::class, 'login']);
 
 
-Route::middleware(['auth:sanctum','role:kupac'])->group(function(){
 
+Route::middleware(['auth:sanctum','role:kupac,slikar,admin'])->group(function(){
     Route::post('/logout',[LogoutController::class,'logout']);
+});
+
+Route::middleware(['auth:sanctum','role:kupac'])->group(function(){
 
     Route::get('/porudzbine/moje',[PorudzbinaController::class,'moje']);
 

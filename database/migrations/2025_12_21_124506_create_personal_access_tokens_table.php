@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->morphs('tokenable');
+            $table->morphs('tokenable'); //polimorphic relacija koja kreiram kolone tokenable_type i tokenable_id (model za koji se cuva token tj. User i njegov id)
             $table->text('name');
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();

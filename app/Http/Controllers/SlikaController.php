@@ -71,8 +71,8 @@ class SlikaController extends Controller
            
             $tehnike = $request->get('tehnike');
 
-            $query->whereHas('tehnike', function ($q) use ($tehnike) {
-                $q->whereIn('tehnike.id', $tehnike);
+            $query->whereHas('tehnike', function ($q) use ($tehnike) { //tehnike je naziv relacije //spoljni query (ulazimo u pivot tabelu i u njoj proveravamo)
+                $q->whereIn('tehnike.id', $tehnike);                   //tehnike je naziv tabele //unutrasnji query - slike kojima bar jedna tehnika ima id kao jedna od prosledjenih tehnika za filtriranje
             });
 
             // foreach ($tehnike as $tehnikaId) {                                //ovo je logika ako zelimo da slika mora da ima sve prosledjene tehnike
@@ -129,7 +129,7 @@ class SlikaController extends Controller
         $validator=Validator::make($request->all(),[
             'galerija_id'=>['required','integer','exists:galerija,id'],
             // 'putanja_fotografije'=>['nullable','string',new PostojiPutanjaSlike()],
-            'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba?: php artisan storage:link
+            'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba: php artisan storage:link
             'cena'=>['required','numeric','min:0'],
             'naziv'=>['required','string','max:50'],
             'visina_cm'=>['required','numeric','min:0'],
@@ -158,9 +158,9 @@ class SlikaController extends Controller
 
         $slika=Slika::create($data);
 
-        $slika->tehnike()->sync($tehnike);
+        $slika->tehnike()->sync($tehnike);  //pomocu relacije tehnike pristupa pivot tabeli, preko sync (detach+attach) fje azurira tehnike vezane za ovu sliku(posto se kreira slika onda samo dodaje prosledjene tehnike iz request-a)
 
-        $slika->load(['galerija','tehnike']); //preko fje tehnike() ucitava iz pivot tabele iz baze tehnike koje su vezane za ovu sliku
+        $slika->load(['galerija','tehnike']); //preko fje/relacije tehnike() ucitava iz pivot tabele iz baze tehnike koje su vezane za ovu sliku
 
         return response()->json(new SlikaResource($slika),201);
     }
@@ -210,11 +210,11 @@ class SlikaController extends Controller
 
         if($request->hasFile('putanja_fotografije')){
 
-            if($slika->putanja_fotografije){
-                Storage::disk('public')->delete($slika->putanja_fotografije);
-            }
+            // if($slika->putanja_fotografije){                                    //ovo je ako zelimo da se fotografija obrise prilikom brisanja slike
+            //     Storage::disk('public')->delete($slika->putanja_fotografije);
+            // }
 
-            $path=$request->file('putanja_fotografije')->store('fotografije','public');
+            $path=$request->file('putanja_fotografije')->store('fotografije','public');  //php artisan storage:link! trenutna implementacija omogucava da se preko http zahteva doda fotografija u storage ali da bi ona bila dostupna frontendu mora se pokrenuti php artisan storage:link
             $data['putanja_fotografije']=$path;
         }
         

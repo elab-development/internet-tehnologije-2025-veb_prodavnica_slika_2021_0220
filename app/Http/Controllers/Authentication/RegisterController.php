@@ -35,7 +35,7 @@ class RegisterController extends Controller
             [
             'id' => $user->id
             ]
-        );  //"pozivamo" rutu sa imenom verification.verify iz api.php, koju smo prethodno napravili,i dodeljujemo id i kad istice.
+        );  //koristimo rutu sa imenom verification.verify iz api.php, koju smo prethodno napravili,i dodeljujemo id i kad istice.
             // Mi je koristimo da napravimo url.
         //http://localhost/verify/email/5?expires=1703448600&signature=abc123xyz //laravel samo doda ovo ?expires=1703448600&signature=abc123xyz
 
