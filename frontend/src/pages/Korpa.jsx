@@ -81,6 +81,12 @@ const Korpa = ({ cartItems, removeFromCart, isAuth, onRegister,onPlaceOrder }) =
     };
 
     fetchPopust();
+
+    window.scrollTo({
+
+          top: 0,
+          behavior: "smooth"
+        });
   }, []);
 
   // Helper funkcija za konverziju cene
@@ -157,7 +163,7 @@ const Korpa = ({ cartItems, removeFromCart, isAuth, onRegister,onPlaceOrder }) =
                 Pogledajte našu kolekciju originalnih slika i dodajte omiljene u korpu. Svako delo je jedinstveno i čeka da upotpuni vaš prostor.
             </p>
             
-            <Link to="/galerija" className="btn-explore-gallery shadow-sm">
+            <Link to="/galerija/" className="btn-explore-gallery shadow-sm">
                 Razgledajte galeriju
             </Link>
         </div>

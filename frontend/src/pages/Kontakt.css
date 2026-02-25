@@ -1,0 +1,212 @@
+.kontakt-page {
+  background-color: #fbf9f6; /* Blaga bež pozadina */
+  min-height: 100vh;
+}
+/* .title {
+  color: #3e3232; /* Tamno braon */
+  /* font-size: 2rem;
+  font-weight: 600;
+}  */
+
+
+/* Osnovne kartice */
+.contact-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  /* box-shadow:   rgba(0, 0, 0, 0.02); */
+  height: 100%;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.highlight-card {
+  background: linear-gradient(135deg, #f7ebe1 0%, #fbf9f6 100%);
+  border: 1px solid rgba(205, 162, 116, 0.2);
+}
+
+.form-card {
+  padding: 2.5rem;
+}
+
+/* Kružići za ikonice */
+.icon-circle-soft {
+  width: 50px;
+  height: 50px;
+  background-color: #f5ecee; /* Bledo roze/crvena */
+  color: #8B3A45; /* Tvoja crvena */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s ease;
+}
+
+/* Kada se pređe preko kartice, krug se uvećava */
+.contact-card:hover .icon-circle-soft {
+  transform: scale(1.1); /* Uvećanje za 15% */
+  /* background-color: #802e3b;  */
+}
+
+/* Kada se pređe preko kartice, ikonica menja boju */
+.contact-card:hover span {
+  color: #cda274; /* Menja se u zlatnu boju */
+  /* Ili ako želiš da bude tamnija: color: #292929; */
+}
+
+.contact-card:hover {
+  /* transform: translateY(-5px); */
+  box-shadow: 0 7px 15px rgba(0, 0, 0, 0.08);
+}
+
+.icon-circle-gold {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(205, 162, 116, 0.2); /* Bledo zlatna */
+  color: #cda274;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Custom Input Polja */
+.form-control-custom {
+  background-color: #fbf9f6;
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control-custom:focus {
+  background-color: #ffffff;
+  border-color: #8B3A45;
+  box-shadow: 0 0 0 4px rgba(139, 58, 69, 0.1);
+  outline: none;
+}
+
+/* Upload Polje */
+.upload-container {
+  border: 2px dashed rgba(0,0,0,0.1);
+  border-radius: 12px;
+  /* padding: 1.5rem; */
+  background-color: #fbf9f6;
+  transition: all 0.3s ease;
+}
+
+.upload-container input,
+.upload-container label
+{
+  padding: 1.5rem;
+}
+
+.upload-container:hover {
+  border-color: #cda274;
+  background-color: #ffffff;
+}
+
+.upload-label {
+  cursor: pointer;
+  width: 100%;
+  margin: 0;
+}
+
+/* Pregled (Thumbnails) učitanih slika */
+.image-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid #ddd;
+}
+
+.btn-remove-img {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #8B3A45;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* MAPA I OVERLAY */
+.map-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  text-decoration: none;
+}
+
+
+
+
+/* Ovo je tajna: onemogućava zoom unutar iframe-a, kako bi klik otvorio novu karticu */
+/* .map-wrapper iframe {
+  pointer-events: none; 
+  
+}
+
+.map-overlay {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 10;
+  cursor: pointer;
+} */
+
+/* Estetski popup sličan Google Maps-u (sa slike) */
+.fake-map-popup {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 15;
+  min-width: 250px;
+}
+
+.directions-icon {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+  text-align: center;
+}
+
+
+.send-mes-btn{
+    border: 0.5px solid rgba(0, 0, 0, 0.708);
+    color: rgba(0, 0, 0, 0.712);
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+.send-mes-btn:hover{
+    background-color: #80363f;
+    color: white;
+    /* transform: scale(1.02); */
+    box-shadow: 0 5px 10px rgba(158, 95, 95, 0.4);
+}
+
+
+
+
+.leaflet-default-icon-path {
+  background-image: url(https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png);
+}

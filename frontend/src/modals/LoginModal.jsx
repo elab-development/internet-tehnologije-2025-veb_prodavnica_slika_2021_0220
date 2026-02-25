@@ -16,6 +16,52 @@ const LoginModal = ({ show, onClose, onSwitch }) => {
   const [error,setError]=useState("");
   const [info,setInfo]=useState("");
 
+
+
+   const handleResetPassword= async (e)=>{
+
+    e.preventDefault();
+    setLoading(true);
+    setInfo("");
+    setError("");
+
+    try {
+      
+      await api.post('/password/forgot',{email});
+
+      setInfo("Uspešno ste poslali zahtev za resetovanje lozinke. Sada će Vam stići verifikacioni mejl.");
+
+            setTimeout(()=>{
+                onClose();
+                setInfo("");
+                setEmail("");
+                setPassword("");
+            },1500);
+
+
+    } catch (error) {
+
+      if(error.response){
+        
+        if(error.response.status===422){
+          setError("Ako ste zaboravili lozinku, ispravno unesite mejl Vašeg naloga i kliknite na 'Zaboravili ste lozinku?'.");
+        }
+        else{
+          setError("Došlo je do greške. Pokušajte ponovo.");
+        }
+      }
+      else{
+        setError("Server nije dostupan. Molimo proverite internet konekciju.");
+      }
+    } finally {
+      setLoading(false);
+    }
+
+  }
+
+
+
+
   const handleSubmit= async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -149,7 +195,7 @@ const LoginModal = ({ show, onClose, onSwitch }) => {
           {error ? <div className="obavestenje error">{error}</div> : null}
 
           {/* DODAJ LOGIKU ZA ZABORAVLJENU LOZINKU */}
-          {/* <span className="forgot">Zaboravili ste lozinku?</span> */}
+          <span className="forgot-btn" onClick={handleResetPassword}>Zaboravili ste lozinku?</span>
 
           <button
           type="submit" 

@@ -152,3 +152,15 @@
   background: none;
   margin-right: -0.4rem;
 }
+
+
+.forgot-btn{
+  cursor: pointer;
+  margin-right: auto;
+  border-bottom: 1px solid #84030300;
+  transition: all 0.3s ease;
+}
+.forgot-btn:hover{
+  border-bottom: 1px solid #840303;
+  color: #8d3c4a;
+}

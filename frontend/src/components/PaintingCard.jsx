@@ -8,9 +8,10 @@ const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fot
 
   const handleAddToCart = () => {
     
-    onAddToCart({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fotografija,
-          //isto kao da pise -> id: id,...
-    });
+    onAddToCart();
+    // { id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fotografija,
+    //       //isto kao da pise -> id: id,...
+    // }
     
   };
 
@@ -32,7 +33,7 @@ const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fot
       
       <div className="card-content">
         <h3 className="painting-title">{naziv}</h3>
-        <p className="painting-type">{tehnike}</p>
+        <p className="painting-type" style={{width:'75%'}}>{tehnike}</p>
         
         <div className="card-footer-custom">
           <span className="price">{cena}</span>

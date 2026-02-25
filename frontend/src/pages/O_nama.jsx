@@ -5,7 +5,15 @@ import { PiSparkleFill } from 'react-icons/pi';
 const ONama = () => {
   // Ovaj deo resava problem sa belom pozadinom oko footera
   useEffect(() => {
+
     document.body.style.backgroundColor = "#fcf8f5";
+
+    window.scrollTo({
+
+      top: 0,
+      behavior: "smooth"
+    });
+    
     return () => {
       document.body.style.backgroundColor = "white"; // Vraca na belo kad odes sa stranice
     };

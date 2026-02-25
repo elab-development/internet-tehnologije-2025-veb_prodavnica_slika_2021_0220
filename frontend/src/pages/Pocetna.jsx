@@ -147,6 +147,12 @@ const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems}) => {
 
     vratiNoveSlike();
 
+    window.scrollTo({
+
+      top: 0,
+      behavior: "smooth"
+    });
+
     //mozes dodati event listener-e tkd. svaki put kad slikar/admin doda sliku da se azurira pocetna strana 
 
     // window.addEventListener('azuriraj_slike',vratiNoveSlike);
@@ -226,7 +232,7 @@ const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems}) => {
             ) : error ? (
               <div className="text-center text-danger">Server nije dostupan. Molimo proverite internet konekciju.</div>
             ) : latestPaintings.length === 0 ? (
-              <div className="text-center">Nema dostupnih slika</div>
+              <div className="text-center">Trenutno nema dostupnih slika.</div>
             ) : (
             latestPaintings.map((painting) => (
                 <div key={painting.id} className="col-md-6 col-lg-4">
@@ -240,9 +246,9 @@ const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems}) => {
                         dostupna={painting.dostupna}
                         fotografija={painting.fotografija}
                         
-                        onAddToCart={(painting)=>addToCart(painting)} //moglo je i bez parametara tj. samo ()=>addToCart(painting) i onda bi poziv bio onAddToCart()
+                        onAddToCart={()=>addToCart(painting)} //moglo je i bez parametara tj. samo ()=>addToCart(painting) i onda bi poziv bio onAddToCart()
                         removeFromCart={()=>removeFromCart(painting.id)}
-                        isInCart={cartItems && cartItems.some((item) => item.id === painting.id)}   //some vraca true/false, dok find vraca element ili null?
+                        isInCart={cartItems && cartItems.some((item) => item.id === painting.id)}   //some vraca true/false, dok find vraca element ili undefined?
                         //^proverimo da li je već u korpi da bi dugme bilo sivo odmah pri učitavanju
                     />
                     

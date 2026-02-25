@@ -1,7 +1,6 @@
 import React from 'react';
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
-// Ovo je tvoja reusable komponenta
 const FaqItem = ({ question, answer, isOpen, onClick }) => {
   return (
     <div 

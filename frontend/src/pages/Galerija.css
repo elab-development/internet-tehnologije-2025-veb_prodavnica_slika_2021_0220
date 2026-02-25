@@ -1,0 +1,469 @@
+.galerija-stranica{
+    /* height: 20rem; */
+    background-color: #fbf9f6; 
+}
+
+
+/* PAGINACIJA */
+
+.custom-pagination .page-link {
+  border-radius: 14px;
+  margin: 0 0.5rem;
+  padding: 8px 18px;
+  border: 2px solid #8B3A45;
+  color: #8B3A45;
+  background-color: transparent;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  /* min-width: 30px;
+  text-align: center; */
+  /* box-shadow: none;
+  outline: none; */
+}
+
+
+
+.custom-pagination .page-link:hover {
+  background-color: #8B3A45;
+  color: white;
+
+  box-shadow: none;
+  outline: none;
+}
+
+.custom-pagination .page-link:focus {
+  border-radius: 14px;
+  /* margin: 0 0.5rem; */
+  /* padding: 8px 18px; */
+  border: 2px solid #8B3A45;
+  color: #8B3A45;
+  background-color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  box-shadow: none;
+  outline: none;
+}
+
+
+
+.custom-pagination .page-item.active .page-link {
+  background-color: #8B3A45;
+  color: white;
+  border-color: #8B3A45;
+
+  box-shadow: none;
+  outline: none;
+}
+
+.custom-pagination .page-link:disabled {
+  opacity: 0.6;
+  /* pointer-events: none; */
+
+  box-shadow: none;
+  outline: none;
+
+  cursor: not-allowed !important ;
+
+  border: 2px solid #9c9c9c;
+  color: #949494;
+  background-color: #eeeeee;
+}
+
+.custom-pagination .page-link:not(:disabled) {
+  opacity: 1;
+  /* display: pointer; */
+}
+
+.custom-pagination .page-link:not(:disabled):hover {
+  background-color: #8B3A45;
+  color: white;
+
+  box-shadow: none;
+  outline: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* --- FILTER I SORT DUGMIĆI --- */
+.custom-filter-btn {
+  background-color: transparent;
+  color: #8B3A45;
+  border: 2px solid #8B3A45;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.custom-filter-btn:hover {
+  background-color: #8B3A45;
+  color: white;
+}
+
+/* Custom Sort Dropdown */
+.custom-sort-btn {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  padding: 10px 16px;
+  border-radius: 8px;
+  min-width: 200px;
+  color: #333;
+  transition: border-color 0.2s;
+}
+
+.custom-sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  width: 100%;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.custom-sort-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #333;
+  transition: background-color 0.2s;
+}
+
+.custom-sort-item:hover {
+  background-color: #f8f9fa;
+}
+
+.custom-sort-item.active {
+  /* background-color: #D4AF37;  */
+  background-color: #bfa35f;
+  /* Zlatno/žuta boja sa prve slike */
+  color: #333;
+  font-weight: 500;
+}
+
+
+/* --- PANEL SA FILTERIMA --- */
+.filters-expansion-panel {
+  background-color: #fcf9f6; /* Blago krem pozadina koja odgovara galeriji */
+  border: 1px solid #f0e9e1;
+  border-radius: 12px;
+}
+
+.filter-heading {
+  font-family: serif;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+/* Prilagođena radio dugmad */
+.filter-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #555;
+}
+
+.filter-radio input[type="radio"] {
+  appearance: none;
+  background-color: transparent;
+  margin: 0;
+  margin-right: 12px;
+  font: inherit;
+  color: currentColor;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #8B3A45;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+}
+
+.filter-radio input[type="radio"]::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em #8B3A45;
+}
+
+.filter-radio input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+/* DVOSTRUKI SLAJDER ZA CENU (Čist CSS hak) */
+/* CENTRIRANI SLAJDERI ZASNOVANI NA APSOLUTNOJ SREDINI */
+.price-slider-wrapper {
+  position: relative;
+  width: 100%;
+  height: 6px; /* Visina linije */
+  margin-top: 30px;
+}
+
+.price-slider-track {
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  top: 50%;
+  transform: translateY(-50%); /* Zadržava na centru nezavisno od okoline */
+  background-color: #ddd;
+  border-radius: 3px;
+  z-index: 1;
+}
+
+.price-slider-fill {
+  position: absolute;
+  height: 6px;
+  top: 50%;
+  transform: translateY(-50%); /* Savršeno se poklapa sa track-om */
+  background-color: #8B3A45;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+/* Polje slajdera se spušta na 0px debljine, u apsolutni centar */
+/* Polje slajdera se prilagođava debljini track-a */
+.price-slider-input {
+  position: absolute;
+  width: 100%;
+  height: 6px; /* Zamenjeno sa 0 na 6px da se poklopi sa debiljinom linije */
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+  z-index: 3;
+  margin: 0;
+  padding: 0; /* OBAVEZNO: Uklanja default padding browsera koji krivo centrira */
+  outline: none;
+}
+
+/* Vizuelni krugić sada ima izračunatu marginu: (6px track - 20px thumb) / 2 = -7px */
+.price-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #8B3A45;
+  pointer-events: auto;
+  cursor: pointer;
+  margin-top: 0px; /* Perfektno centriranje na liniju od 6px */
+}
+
+.price-slider-input::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #8B3A45;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: none;
+  margin-top: 0; /* Firefox sam centrira ovo */
+}
+
+
+/* --- VERTIKALNI SLAJDERI (HACK ZA CSS ROTACIJU) --- */
+.v-slider-box {
+  width: 40px;
+  height: 150px; /* Visina same linije vertikalnog slajdera */
+  position: relative;
+}
+
+.v-slider {
+  width: 150px;
+  height: 6px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg); /* Rotira ceo element tačno u središtu svog prostora */
+  margin-top: 0;
+}
+
+
+
+/* Dugmići unutar panela za filtere */
+.btn-filter-clear {
+  background: transparent;
+  color: #8B3A45;
+  border: 1px solid #8B3A45;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-filter-apply {
+  background: #8B3A45;
+  color: white;
+  border: 1px solid #8B3A45;
+  padding: 8px 30px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-filter-apply:hover {
+  background: #6a2a34;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Custom Checkbox za Tehnike */
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #555;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  appearance: none;
+  background-color: transparent;
+  margin: 0;
+  margin-right: 12px;
+  font: inherit;
+  color: currentColor;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #8B3A45;
+  border-radius: 4px; /* Kvadratast oblik za checkbox */
+  display: grid;
+  place-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.filter-checkbox input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em white;
+  background-color: white;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); /* Oblik kvakice */
+}
+
+.filter-checkbox input[type="checkbox"]:checked {
+  background-color: #8B3A45;
+}
+
+.filter-checkbox input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.custom-pagination .page-link:focus:not(:focus-visible) {
+  /* background-color: transparent;
+  box-shadow: none;
+  outline: none; */
+  /* z-index: 100; */
+
+  /* border-radius: 14px; */
+  /* margin: 0 0.5rem; */
+  /* padding: 8px 18px; */
+  border: 2px solid #8B3A45;
+  color: #8B3A45;
+  background-color: transparent;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  
+  box-shadow: none;
+  outline: none;
+}
+
+
+.custom-pagination .page-link:focus:not(:focus-visible):hover {
+  background-color: #8B3A45;
+  color: white;
+
+  box-shadow: none;
+  outline: none;
+}
+
+
+.custom-pagination .page-item.active .page-link:focus:not(:focus-visible) {
+  background-color: #8B3A45;
+  color: white;
+  border-color: #8B3A45;
+
+  box-shadow: none;
+  outline: none;
+}
+
+
+
+
+
+@media (max-width:430px) {
+
+  .custom-pagination .page-link {
+    padding: 4px 12px;
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

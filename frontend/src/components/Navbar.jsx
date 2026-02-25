@@ -32,7 +32,7 @@ const Navbar = ({ onLogin,onRegister,isAuth,onLogout,cartCount }) => {          
   return (
 
     <>
-    <div className="py-3 header">
+    <div className="py-3 header" id='top'>
       <div className="container-fluid">
         {/* flex-nowrap sprečava, po svaku cenu, da se elementi iz flexboxa prelamaju tj. da neki od njih predje u donji red cak iako se ekran dosta suzi */}
         <div className="d-flex align-items-center justify-content-between flex-nowrap">
