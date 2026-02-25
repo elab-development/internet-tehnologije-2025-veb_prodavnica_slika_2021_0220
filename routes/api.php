@@ -10,16 +10,21 @@ use App\Http\Controllers\PopustController;
 use App\Http\Controllers\PorudzbinaController;
 use App\Http\Controllers\SlikaController;
 use App\Http\Controllers\TehnikaController;
+use App\Http\Controllers\UserMessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
+
+Route::post('/poruka-korisnika',[UserMessageController::class,'proslediPoruku']);
 
 
 
 Route::post('/password/forgot', [ForgotPasswordController::class, 'sendResetLink']);
 
 
-Route::get('/password/reset', [ForgotPasswordController::class, 'showResetForm'])
-    ->name('password.reset.form');
+// Route::get('/password/reset', [ForgotPasswordController::class, 'showResetForm'])
+//     ->name('password.reset.form');
 
 Route::post('/password/reset', [ForgotPasswordController::class, 'resetPassword'])
     ->name('password.reset.submit');

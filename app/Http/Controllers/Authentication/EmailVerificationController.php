@@ -31,8 +31,8 @@ class EmailVerificationController extends Controller
         //     'email_verified_at' => now()   //mi nemamo ovaj atr...
         // ]);
 
-        return response()->json([
-            'message' => 'Email uspešno verifikovan. Možete se prijaviti.'
-        ],200);
+        return redirect(
+            config('app.frontend_url') . '/?verified=true'     //config('app.frontend_url') u config folderu imamo app.php u kom postoji (mi smo ga dodali) key 'frontend_url' ciji value je u .env (to je url: localhost:3000) (i to smo dodali mi)
+        );
     }
 }
