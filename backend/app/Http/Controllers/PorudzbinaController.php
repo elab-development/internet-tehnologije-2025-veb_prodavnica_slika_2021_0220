@@ -345,6 +345,8 @@ class PorudzbinaController extends Controller
 
                 $slika=$slike[$stavka['slika_id']];
 
+                $slika->update(['dostupna'=>false]);
+
                 Stavka::create([
                     'porudzbina_id'=>$porudzbina->id,
                     'slika_id'=>$stavka['slika_id'],
@@ -356,7 +358,7 @@ class PorudzbinaController extends Controller
 
             DB::commit();
 
-            $porudzbina->load(['popust','user','stavke.slika']);
+            $porudzbina->load(['popust','user','stavke.slika']); //ne treba ti ovo ako si sa with ucitao relacije
 
 
             //-mailtrap, mogao bi da dodas dugme kojim se prebacujes direktno na sajt u emails.notify-privileged
@@ -372,7 +374,7 @@ class PorudzbinaController extends Controller
 
                 Mail::to($pu->email)
                 ->later(                                    //da bi later() radio, mora da run-uje-> php artisan queue:work --sleep=10 --tries=3 
-                    now()->addSeconds($index+10),  //delay
+                    now()->addSeconds($index*10),  //delay
                     new PrivilegedNotificationMail($pu, $porudzbina)
                 );
 
@@ -488,7 +490,7 @@ class PorudzbinaController extends Controller
 
             }
             
-            $popustId = array_key_exists('popust_id', $data) //kao isset je ali je true cak i kad je prosledjen null, za razliku od isset
+            $popustId = array_key_exists('popust_id', $data) //array_key_exists kao isset je ali je true cak i kad je prosledjen null, za razliku od isset
                 ? $data['popust_id']
                 : $porudzbina->popust_id;
 
@@ -516,7 +518,7 @@ class PorudzbinaController extends Controller
 
             DB::commit();
 
-            $porudzbina->load(['popust','user','stavke.slika']);
+            $porudzbina->load(['popust','user','stavke.slika']); 
 
             return response()->json(new PorudzbinaResource($porudzbina),200);
 
@@ -532,7 +534,7 @@ class PorudzbinaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($id)                 //KADA BUDES IMPLEMENTIRAO I OVO dodaj da se slike koje su bile deo izbrisane porudybine opet postave na dostupna:true
     {
         $porudzbina=Porudzbina::findOrFail($id);
 
@@ -561,14 +563,15 @@ class PorudzbinaController extends Controller
     }
 
 
-    public function exportCsv(Request $request) //dodaj popust kao kolonu
+    public function exportCsv(Request $request) 
     {
-        // (opciono) ako kasnije dodaš role
+        // ako kasnije dodaš role
         // abort_unless($request->user()->is_admin, 403);
 
         $porudzbine = Porudzbina::with([
             'user',
-            'stavke.slika'
+            'stavke.slika',
+            'popust'
         ])
         ->orderBy('poslato', 'asc')
         ->orderBy('datum', 'asc')

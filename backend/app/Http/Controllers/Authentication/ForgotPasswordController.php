@@ -53,18 +53,23 @@ class ForgotPasswordController extends Controller
             ]
         );
 
-        // $resetUrl=config('app.frontend_url',config('app.url')) .
-        // '/reset-password?token=' . urlencode($token) . 
-        // '&email=' . urlencode($user->email);
+        //URL ZA FRONTEND
+
+        $resetUrl=config('app.frontend_url') .
+        '/?reset=true&token=' . urlencode($token) . 
+        '&email=' . urlencode($user->email);
+        //
+
 
         //OVO JE BACKEND URL (ne frontend)
-        $resetUrl = route(
-            'password.reset.form', 
-            [
-            'token' => $token,
-            'email' => $user->email
-            ]
-        ); //"pozivamo" rutu sa imenom password.reset.form iz api.php, koju smo prethodno napravili,i dodeljujemo token i email.
+        // $resetUrl = route(
+        //     'password.reset.form', 
+        //     [
+        //     'token' => $token,
+        //     'email' => $user->email
+        //     ]
+        // );
+         //"pozivamo" rutu sa imenom password.reset.form iz api.php, koju smo prethodno napravili,i dodeljujemo token i email.
             // Mi je koristimo da napravimo url.
         //http://localhost/password/reset?token=XXX&email=YYY //laravel samo doda ovo ?expires=1703448600&signature=abc123xyz
 
@@ -82,17 +87,17 @@ class ForgotPasswordController extends Controller
         ], 200);
     }
 
-    //  METODA za PRIKAZ FORME
-    public function showResetForm(Request $request)
-    {
-        return view(
-            'emails.Reset-form',
-            [
-            'token' => $request->token,
-            'email' => $request->email
-            ]
-        );
-    }
+    //  METODA za PRIKAZ blade FORME
+    // public function showResetForm(Request $request)
+    // {
+    //     return view(
+    //         'emails.Reset-form',
+    //         [
+    //         'token' => $request->token,
+    //         'email' => $request->email
+    //         ]
+    //     );
+    // }
 
 
     public function resetPassword(Request $request)

@@ -39,9 +39,12 @@ class SlikaController extends Controller
             'dostupna'   => 'sometimes|boolean',
             'cena_min'   => 'sometimes|numeric|min:0',
             'cena_max'   => 'sometimes|numeric|min:0',
-            'visina_cm'  => 'sometimes|integer|min:1',
-            'sirina_cm'  => 'sometimes|integer|min:1',
+            'visina_cm_min'  => 'sometimes|integer|min:0',
+            'visina_cm_max'  => 'sometimes|integer|min:0',
+            'sirina_cm_min'  => 'sometimes|integer|min:0',
+            'sirina_cm_max'  => 'sometimes|integer|min:0',
             'sort_cena'  => 'sometimes|in:asc,desc',
+            'sort_starost'=> 'sometimes|in:asc,desc',
             'tehnike'    => 'sometimes|array|min:1',
             'tehnike.*'  => 'integer|exists:tehnike,id',
         ]);
@@ -50,20 +53,31 @@ class SlikaController extends Controller
 
         $query=Slika::with(['tehnike']);
         
+        // $ukupanBrojSlika=$query->count();
+        
         if($request->filled('dostupna')){
             $query->where('dostupna',$request->get('dostupna')); //isto kao $query=$query->where...
         }
+
         if($request->filled('cena_min')){
             $query->where('cena','>=',$request->get('cena_min'));
         }
         if($request->filled('cena_max')){
             $query->where('cena','<=',$request->get('cena_max'));
         }
-        if($request->filled('visina_cm')){
-            $query->where('visina_cm',$request->get('visina_cm'));
+
+        if($request->filled('visina_cm_min')){
+            $query->where('visina_cm','>=',$request->get('visina_cm_min'));
         }
-        if($request->filled('sirina_cm')){
-            $query->where('sirina_cm',$request->get('sirina_cm'));
+        if($request->filled('visina_cm_max')){
+            $query->where('visina_cm','<=',$request->get('visina_cm_max'));
+        }
+
+        if($request->filled('sirina_cm_min')){
+            $query->where('sirina_cm','>=',$request->get('sirina_cm_min'));
+        }
+        if($request->filled('sirina_cm_max')){
+            $query->where('sirina_cm','<=',$request->get('sirina_cm_max'));
         }
 
 
@@ -71,8 +85,8 @@ class SlikaController extends Controller
            
             $tehnike = $request->get('tehnike');
 
-            $query->whereHas('tehnike', function ($q) use ($tehnike) {
-                $q->whereIn('tehnike.id', $tehnike);
+            $query->whereHas('tehnike', function ($q) use ($tehnike) { //tehnike je naziv relacije //spoljni query (ulazimo u pivot tabelu i u njoj proveravamo)
+                $q->whereIn('tehnike.id', $tehnike);                   //tehnike je naziv tabele //unutrasnji query - slike kojima bar jedna tehnika ima id kao jedna od prosledjenih tehnika za filtriranje
             });
 
             // foreach ($tehnike as $tehnikaId) {                                //ovo je logika ako zelimo da slika mora da ima sve prosledjene tehnike
@@ -89,9 +103,22 @@ class SlikaController extends Controller
                 $query->orderBy('cena', $request->get('sort_cena'));
         }
 
-        $paginator=$query->paginate($perPage);
+        if($request->filled('sort_starost') && 
+            in_array($request->get('sort_starost'),['asc','desc'])){
 
-        return SlikaResource::collection($paginator);
+                $query->orderBy('created_at',$request->get('sort_starost'));
+        }
+
+        $paginator=$query->paginate($perPage);
+        
+        // $ukupanBrojStrana=$ukupanBrojSlika/$perPage;
+        //ceil kao round (samo zaokruzuje na najveci integer)
+
+        // return SlikaResource::collection($paginator);
+        return response()->json([
+            'slike' => SlikaResource::collection($paginator),
+            'ukupanBrojStrana'=> $paginator->lastPage() 
+            ] ,200);
     }
 
     /*
@@ -129,7 +156,7 @@ class SlikaController extends Controller
         $validator=Validator::make($request->all(),[
             'galerija_id'=>['required','integer','exists:galerija,id'],
             // 'putanja_fotografije'=>['nullable','string',new PostojiPutanjaSlike()],
-            'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba?: php artisan storage:link
+            'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba: php artisan storage:link
             'cena'=>['required','numeric','min:0'],
             'naziv'=>['required','string','max:50'],
             'visina_cm'=>['required','numeric','min:0'],
@@ -158,9 +185,9 @@ class SlikaController extends Controller
 
         $slika=Slika::create($data);
 
-        $slika->tehnike()->sync($tehnike);
+        $slika->tehnike()->sync($tehnike);  //pomocu relacije tehnike pristupa pivot tabeli, preko sync (detach+attach) fje azurira tehnike vezane za ovu sliku(posto se kreira slika onda samo dodaje prosledjene tehnike iz request-a)
 
-        $slika->load(['galerija','tehnike']); //preko fje tehnike() ucitava iz pivot tabele iz baze tehnike koje su vezane za ovu sliku
+        $slika->load(['galerija','tehnike']); //preko fje/relacije tehnike() ucitava iz pivot tabele iz baze tehnike koje su vezane za ovu sliku
 
         return response()->json(new SlikaResource($slika),201);
     }
@@ -210,11 +237,11 @@ class SlikaController extends Controller
 
         if($request->hasFile('putanja_fotografije')){
 
-            if($slika->putanja_fotografije){
-                Storage::disk('public')->delete($slika->putanja_fotografije);
-            }
+            // if($slika->putanja_fotografije){                                    //ovo je ako zelimo da se fotografija obrise prilikom brisanja slike
+            //     Storage::disk('public')->delete($slika->putanja_fotografije);
+            // }
 
-            $path=$request->file('putanja_fotografije')->store('fotografije','public');
+            $path=$request->file('putanja_fotografije')->store('fotografije','public');  //php artisan storage:link! trenutna implementacija omogucava da se preko http zahteva doda fotografija u storage ali da bi ona bila dostupna frontendu mora se pokrenuti php artisan storage:link
             $data['putanja_fotografije']=$path;
         }
         

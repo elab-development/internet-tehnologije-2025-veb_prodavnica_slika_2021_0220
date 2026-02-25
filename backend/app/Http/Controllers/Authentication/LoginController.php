@@ -23,13 +23,13 @@ class LoginController extends Controller
         }
         $data=$validator->validated();
 
-        if(!Auth::attempt($data)){
+        if(!Auth::attempt($data)){ //pronalazi korisnika sa prosledjenim mejlom, hesira prosledjenu lozinku i poredi (hesiranu) prosledjenu sa onom (hesiranom) iz baze
             return response()->json([
                 'message' => 'Pogrešan email ili lozinka.'
             ], 401);
         }
 
-        $user = Auth::user();  //isto kao $user=$request->user();
+        $user=$request->user(); //isto kao $user = Auth::user(); 
 
         if ($user->email_verified_at==null) {
             return response()->json([
@@ -37,7 +37,7 @@ class LoginController extends Controller
             ], 403);
         }
 
-        $token = $user->createToken('api_token')->plainTextToken;
+        $token = $user->createToken('api_token')->plainTextToken; 
 
         return response()->json([
             'message'=>'Uspesno ste se prijavili',

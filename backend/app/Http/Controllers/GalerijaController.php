@@ -13,7 +13,8 @@ class GalerijaController extends Controller
      */
     public function index()
     {
-        return response()->json(GalerijaResource::collection(Galerija::all()),200);
+        $galerija=Galerija::first();
+        return response()->json(new GalerijaResource($galerija),200);
     }
 
     /**

@@ -5,23 +5,26 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PrivilegedNotificationMail extends Mailable
+class KorisnickaPoruka extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $porudzbina;
+
+    public $primalac;
+    public $poruka;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $porudzbina)
+    public function __construct($primalac,$poruka)
     {
-        $this->user=$user;
-        $this->porudzbina=$porudzbina;
+        $this->primalac=$primalac;
+        $this->poruka=$poruka;
     }
 
     /**
@@ -30,7 +33,7 @@ class PrivilegedNotificationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pristigla je nova porudzbina',
+            subject: 'Korisnička poruka',
         );
     }
 
@@ -40,7 +43,7 @@ class PrivilegedNotificationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.notify-privileged',
+            markdown: 'emails.korisnicka-poruka',
         );
     }
 
@@ -51,6 +54,16 @@ class PrivilegedNotificationMail extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        $attachments = [];
+    
+        if(isset($this->poruka['slike'])){
+            foreach($this->poruka['slike'] as $slika){
+                $attachments[] = Attachment::fromPath($slika->getRealPath())
+                    ->as($slika->getClientOriginalName())
+                    ->withMime($slika->getMimeType());
+            }
+        }
+        
+        return $attachments;
     }
 }
