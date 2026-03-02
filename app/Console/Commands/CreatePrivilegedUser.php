@@ -127,13 +127,17 @@ class CreatePrivilegedUser extends Command
                 ]
             );
             
-            $resetUrl=route(
-                'password.reset.form',
-                [
-                    'token'=>$token,
-                    'email'=>$user->email
-                ]
-            );
+            // $resetUrl=route(
+            //     'password.reset.form',
+            //     [
+            //         'token'=>$token,
+            //         'email'=>$user->email
+            //     ]
+            // );
+
+            $resetUrl=config('app.frontend_url') .
+            '/?reset=true&token=' . urlencode($token) . 
+            '&email=' . urlencode($user->email);
 
             Mail::to($user->email)->send(
                 new ResetPasswordMail($user,$resetUrl)

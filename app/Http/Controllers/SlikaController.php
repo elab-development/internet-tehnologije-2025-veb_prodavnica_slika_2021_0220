@@ -154,7 +154,7 @@ class SlikaController extends Controller
     public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
-            'galerija_id'=>['required','integer','exists:galerija,id'],
+            'galerija_id'=>['required','integer','exists:galerija,id'], //nullable?
             // 'putanja_fotografije'=>['nullable','string',new PostojiPutanjaSlike()],
             'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba: php artisan storage:link
             'cena'=>['required','numeric','min:0'],

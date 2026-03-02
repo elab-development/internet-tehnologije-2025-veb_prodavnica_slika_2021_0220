@@ -8,6 +8,7 @@ use App\Http\Controllers\Authentication\RegisterController;
 use App\Http\Controllers\GalerijaController;
 use App\Http\Controllers\PopustController;
 use App\Http\Controllers\PorudzbinaController;
+use App\Http\Controllers\PrivilegedUserController;
 use App\Http\Controllers\SlikaController;
 use App\Http\Controllers\TehnikaController;
 use App\Http\Controllers\UserMessageController;
@@ -115,8 +116,11 @@ Route::post('/porudzbine',[PorudzbinaController::class,'storeGost']);
 
 
 Route::middleware(['auth:sanctum','role:admin,slikar'])->group(function(){
+
+    Route::get('/mesecniBrojPorudzbina',[PrivilegedUserController::class,'mesecniBrojPorudzbina']);
     // slike
-    Route::post('/slike', [SlikaController::class, 'store']);
+    // Route::post('/slike', [SlikaController::class, 'store']);
+    Route::post('/slike',[PrivilegedUserController::class,'dodajSliku']);
     Route::post('/slike/{id}', [SlikaController::class, 'update']);
     Route::delete('/slike/{id}', [SlikaController::class, 'destroy']);
 

@@ -9,6 +9,11 @@ Pristigla je **nova poruka** sa sledećim podacima:
 
 ---
 
+## Poruka
+- {{ $poruka['poruka'] }} 
+
+---
+
 @if(isset($poruka['slike']))
   {{-- slike su fajlovi, samo prikaži da su priložene --}}
   Priloženo {{ count($poruka['slike']) }} slika.
