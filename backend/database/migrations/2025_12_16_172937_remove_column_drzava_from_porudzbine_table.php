@@ -9,20 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('porudzbine', function (Blueprint $table) {
-            $table->dropColumn('drzava');
-        });
-    }
+    // public function up(): void
+    // {
+    //     Schema::table('porudzbine', function (Blueprint $table) {
+    //         $table->dropColumn('drzava');
+    //     });
+    // }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('porudzbine', function (Blueprint $table) {
-            $table->enum('drzava',['Srbija'])->default('Srbija')->after('prezime');
-        });
-    }
+    // /**
+    //  * Reverse the migrations.
+    //  */
+    // public function down(): void
+    // {
+    //     Schema::table('porudzbine', function (Blueprint $table) {
+    //         $table->enum('drzava',['Srbija'])->default('Srbija')->after('prezime');
+    //     });
+    // }
 };

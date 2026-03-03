@@ -15,7 +15,7 @@ class RoleMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
-    { //...roles je slicno kao u python-u *args (proizvoljan broj parametara), mi ove parametre prosledjujemo kroz middleware u api.php (roles:slikar,admin)
+    { //...roles je slicno kao u python-u *args (proizvoljan broj parametara), mi ove parametre prosledjujemo kroz middleware u api.php (role:slikar,admin), a role alias definisemo u bootstrap-u u app.php
         $user=Auth::user();
 
         if (!$user) {

@@ -36,7 +36,9 @@ class PorudzbinaResource extends JsonResource
             'postanski_broj'=>$this->postanski_broj,
             'telefon'=>$this->telefon,
             'poslato'=>(boolean)$this->poslato,
-            'stavke'=>StavkaResource::collection($this->whenLoaded('stavke'))
+            'stavke'=>StavkaResource::collection($this->whenLoaded('stavke')),
+
+            'created_at'=>$this->created_at
         ];
     }
 }
