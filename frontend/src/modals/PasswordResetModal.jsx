@@ -14,12 +14,6 @@ const PasswordResetModal = ({show,onClose,token,email}) => {
     const [error,setError]=useState("");
 
 
-    console.log("token: "+ token,                                  //
-        "email: "+email,
-        "password: "+password,
-        "password_confirmation: "+password_confirmation
-    );
-
     const handleSubmit= async (e)=>{
 
         e.preventDefault();

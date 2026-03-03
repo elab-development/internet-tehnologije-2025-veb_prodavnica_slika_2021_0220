@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import {BrowserRouter,Routes,Route} from 'react-router-dom';
+import {BrowserRouter,Routes,Route, Navigate} from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Pocetna from './pages/Pocetna.jsx';
 import Footer from './components/Footer.jsx';
@@ -14,12 +14,25 @@ import O_nama from './pages/O_nama.jsx';
 import api from './api/Api.js';
 import Korpa from './pages/Korpa.jsx';
 import PlaceOrderModal from './modals/PlaceOrderModal.jsx';
+import CestaPitanja from './pages/CestaPitanja.jsx';
 import Kontakt from './pages/Kontakt.jsx';
+
 import PasswordResetModal from './modals/PasswordResetModal.jsx';
+import AnalizaPoslovanja from './privileged-pages/AnalizaPoslovanja.jsx';
+
+
+
+
+import PolitikaPrivatnosti from './pages/PolitikaPrivatnosti';
+import UsloviKoriscenja from './pages/UsloviKoriscenja';
 
 
 
 function App() {
+
+
+  const [cartItems, setCartItems] = useState([]);
+
 
   const [resetPasswordOpen,setResetPasswordOpen]=useState(false);
 
@@ -47,10 +60,13 @@ function App() {
     }
   }, []); 
 
+
+
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen,setRegisterOpen]=useState(false);
 
   const [isAuth, setIsAuth] = useState(false);
+  const [isPrivilegedUser, setIsPrivilegedUser]=useState(false);
 
   useEffect(() => {        //efekat se izvrsava jednom, prilikom prvog rendera
     const checkAuth = () => {
@@ -58,6 +74,36 @@ function App() {
         localStorage.getItem("token") ||
         sessionStorage.getItem("token");
       setIsAuth(!!token);  // !! pretvara vrednost u true ili false, ako ima vrednost const token ce postati true a ako je bio null postace false
+      
+      const userJsonString=localStorage.getItem("user")||sessionStorage.getItem("user"); //ako je prva vrednost null dodeljuje drugu vrednost (posle ||), jer je poslednja
+      const user=userJsonString ? JSON.parse(userJsonString) : null;              //JSON.parse je suprotan od JSON.stringify, on "{"ime":"Pera"}" pretvara u {"ime":"Pera"}
+      
+      if (user) { 
+        const uloga=user.uloga;
+
+        if(["admin","slikar"].includes(uloga)){
+
+          setIsPrivilegedUser(true);
+          setCartItems([]);
+
+        }
+        else{
+          setIsPrivilegedUser(false);
+        }
+      }
+      else{
+        setIsPrivilegedUser(false);
+      }
+
+      // moze i samo :
+      // if (user) { 
+      //   setIsPrivilegedUser(["admin","slikar"].includes(user.uloga));
+      // } else {
+      //   setIsPrivilegedUser(false);
+      // }
+
+    
+
     };
 
     checkAuth();  //odmah na pocetku pozivamo fju da se postavi status korisnika
@@ -83,11 +129,12 @@ function App() {
         sessionStorage.clear();
 
         setIsAuth(false);
+        setIsPrivilegedUser(false);
       }
     };
 
 
-  const [cartItems, setCartItems] = useState([]);
+  
 
   // Funkcija za dodavanje (prosledjujemo je u Pocetna)
   const addToCart = (product) => {
@@ -127,6 +174,7 @@ function App() {
       onLogout={handleLogout} //umesto da kao kod login-a i register-a (submit)hander-i budu u modalu handleLogout je u App.js, a "poziv" komponente <LogoutModal> nije u App.js kao sto su <LoginModal> i <RegisterModal> vec je na dnu Navbar.jsx
       //^App.js komunicira sa Navbar.jsx u oba slucajeva samo su elementi za komunikaciju (Modali i handleri) na razlicitim pozicijama 
       cartCount={cartItems.length}
+      isPrivilegedUser={isPrivilegedUser}
       />
       
 
@@ -138,9 +186,14 @@ function App() {
                                     addToCart={addToCart}
                                     removeFromCart={removeFromCart}
                                     cartItems={cartItems}
+                                    isPrivilegedUser={isPrivilegedUser}
                                   />}
           />
-          
+          {isPrivilegedUser ? (
+
+            <Route path='/analiza-poslovanja/' element={<AnalizaPoslovanja/>}/>
+          ) : (
+
           <Route path="/korpa/" element={<Korpa
                                          cartItems={cartItems} 
                                          removeFromCart={removeFromCart}
@@ -149,16 +202,31 @@ function App() {
                                          isAuth={isAuth}
                                         />} 
           />
-
+          )}
+          
           <Route path='/galerija/' element={<Galerija
                                             onAddToCart={addToCart}
                                             onRemoveFromCart={removeFromCart}
                                             cartItems={cartItems}
+                                            isPrivilegedUser={isPrivilegedUser}
                                             />} 
           />
+
           <Route path='/o-nama/' element={<O_nama/>} />
+
           <Route path='/kontakt/' element={<Kontakt/>} />
+
+          <Route path='/informacije/' element={<CestaPitanja />} />
+          <Route path='/kontakt/' element={<Kontakt/>} />
+          <Route path='/privatnost/' element={<PolitikaPrivatnosti />} />
+          <Route path='/uslovi/' element={<UsloviKoriscenja />} />
+
+          
+          <Route path="*" element={isPrivilegedUser ? <Navigate to="/analiza-poslovanja/" /> : <Navigate to="/" />} /> {/* path="*" uhvati sve URL-ove koji nisu matchovali nijednu rutu iznad" */}
+
+
         </Routes>
+        
         <Footer />
       </div>
 
@@ -185,13 +253,6 @@ function App() {
         isAuth={isAuth}
         cartItems={cartItems}
         setCartItems={setCartItems}
-      />
-
-      <PasswordResetModal
-        show={resetPasswordOpen}
-        onClose={()=>setResetPasswordOpen(false)}
-        token={tokenResetPass}
-        email={emailResetPass}
       />
 
 

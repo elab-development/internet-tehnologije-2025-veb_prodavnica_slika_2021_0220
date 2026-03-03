@@ -1,0 +1,220 @@
+/* ===== AnalizaPoslovanja.css ===== */
+
+/* Page wrapper */
+.analiza-page {
+  min-height: 100vh;
+  background: #faf9f7;
+  font-family: 'Georgia', serif;
+  padding: 32px 0;
+}
+
+/* Stat Cards */
+.stat-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+@media (max-width:880px) {
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+}
+
+
+/* Chart & Form Cards */
+.chart-card,
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.chart-loading {
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+/* Form elements */
+.form-label {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  font-family: 'Georgia', serif;
+}
+
+.form-label .required {
+  color: #8b1a2e;
+}
+
+.form-label .hint {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.form-input {
+  width: 100%;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #374151;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+  font-family: 'Georgia', serif;
+}
+
+.form-input:focus {
+  border-color: #8b1a2e;
+}
+
+.form-input::placeholder {
+  color: #b0b7c3;
+}
+
+/* Tehnika pills */
+.tehnika-pill {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1.5px solid #d1d5db;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Georgia', serif;
+  color: #374151;
+}
+
+.tehnika-pill.active {
+  background: #6b1827;
+  color: #fff;
+  border-color: #6b1827
+  /* font-weight: 600; */
+}
+
+/* Submit button */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: #6b1827;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Georgia', serif;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #57131f;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px;
+  left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: #8b1a2e;
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+
+
+.obavestenje{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #f8f4f1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.info{
+  border: 2px solid rgb(66, 241, 50);
+  color: rgb(66, 241, 50);
+  background-color: rgba(66, 241, 50, 0.148);
+}
+
+ .error{
+  border: 2px solid rgb(208, 9, 9);
+  color: rgb(208, 9, 9);
+  background-color: rgba(208, 9, 9, 0.171);
+}

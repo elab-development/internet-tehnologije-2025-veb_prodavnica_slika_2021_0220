@@ -1,3 +1,4 @@
+/* SREDI POMOCU focus (kao kod paginacije) DA NA MALIM EKRANIMA KAD SE KLINE NA DUGME TIPA INSTAGRAM IKONICU NE ZAMRZNE BOJA DUGMETA IZ HOVER EFEKTA*/
 .footer-section {
   /* background: rgb(65, 22, 31); */
   background: #5a1f2b;
@@ -155,9 +156,9 @@
 
 
 
-
+/* 
 .footer-section {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(40px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
@@ -165,4 +166,4 @@
 .footer-section.fade-up {
   opacity: 1;
   transform: translateY(0);
-}
+} */

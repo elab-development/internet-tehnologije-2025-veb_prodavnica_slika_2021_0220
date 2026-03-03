@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaTiktok, FaMapMarkerAlt, FaPhoneAlt, FaBuilding, FaInfoCircle, FaChevronUp } from 'react-icons/fa';
-import { MdMailOutline } from "react-icons/md";
 import './Footer.css';
 
 import { HashLink } from 'react-router-hash-link';
@@ -13,29 +12,29 @@ const Footer = () => {
     const godina = new Date().getFullYear();
 
 // fade-up animacija za prvi scroll
-    const footerRef = useRef(null);
+    // const footerRef = useRef(null);
 
-useEffect(() => {
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('fade-up');
-        observer.unobserve(entry.target); // animira se samo jednom
-      }
-    },
-    { threshold: 0.4 }
-    );
+// useEffect(() => {
+//   const observer = new IntersectionObserver(
+//     ([entry]) => {
+//       if (entry.isIntersecting) {
+//         entry.target.classList.add('fade-up');
+//         observer.unobserve(entry.target); // animira se samo jednom
+//       }
+//     },
+//     { threshold: 0.4 }
+//     );
 
-    if (footerRef.current) {
-        observer.observe(footerRef.current);
-    }
+//     if (footerRef.current) {
+//         observer.observe(footerRef.current);
+//     }
 
-    return () => observer.disconnect();
-    }, []);
+//     return () => observer.disconnect();
+//     }, []);
     //
 
   return (
-    <footer ref={footerRef} className="footer-section">
+    <footer className="footer-section">  {/*ref={footerRef}  */}
       <div className="container py-5">
         <div className="row gy-5 justify-content-lg-between">  {/* row -> flex+grid, gy-vertikalni gap, justify-content-lg-between (razvlaci kolone na velikim ekranima)*/}
           
@@ -51,11 +50,11 @@ useEffect(() => {
             <ul className="list-unstyled contact-info">  {/* list-unstyled uklanja bullets */}
               <li>
                 <FaMapMarkerAlt className="footer-icon" />
-                <span>Kej Kola Srpskih Sestara 1, Niš</span>
+                <span>Kej srpskih sestara, Niš</span>
               </li>
               <li>
-                <MdMailOutline className="footer-icon" style={{height:'2rem'}}/>
-                <span>pravi.izbor@danyArt.rs</span>
+                <FaInfoCircle className="footer-icon" />
+                <span>PIB 111122222</span>
               </li>
               <li>
                 <FaPhoneAlt className="footer-icon" />
@@ -100,6 +99,7 @@ useEffect(() => {
               <li><Link to="/uslovi/">Uslovi korišćenja</Link></li>
               <li><Link to="/privatnost/">Politika privatnosti</Link></li>
               <li><Link to="/informacije/">Česta pitanja</Link></li>
+              
             </ul>
 
             <HashLink smooth to="#top" className="scroll-to-top-simple">

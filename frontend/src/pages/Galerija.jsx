@@ -6,7 +6,7 @@ import { GiDiamonds } from 'react-icons/gi';
 import { FiFilter, FiChevronDown, FiCheck } from 'react-icons/fi'; 
 
 //namesti da slider-i (mozda i checkboxovi) budu reusable components
-const Galerija = ({ onAddToCart, onRemoveFromCart, cartItems }) => {
+const Galerija = ({ onAddToCart, onRemoveFromCart, cartItems,isPrivilegedUser }) => {
   const [allPaintings, setAllPaintings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -387,7 +387,7 @@ const Galerija = ({ onAddToCart, onRemoveFromCart, cartItems }) => {
 
             <div className="d-flex justify-content-end mt-4 gap-3">
               <button className="btn-filter-clear" onClick={()=>{handleClearFilters(); setShowFilters(false); setCurrentPage(1);}}>Poništi sve</button>
-              <button className="btn-filter-apply" onClick={() => {vratiSveSlike(); setShowFilters(false); setCurrentPage(1);}}>Primeni</button>
+              <button className="btn-filter-apply" onClick={() => {vratiSveSlike(); setShowFilters(false); setCurrentPage(1); window.scrollTo({top:0,behavior:"smooth"}) }}>Primeni</button>
             </div>
           </div>
         )}
@@ -415,6 +415,7 @@ const Galerija = ({ onAddToCart, onRemoveFromCart, cartItems }) => {
                   onAddToCart={() => onAddToCart(painting)}
                   removeFromCart={() => onRemoveFromCart(painting.id)}
                   isInCart={cartItems && cartItems.some((item) => painting.id === item.id)}
+                  isPrivilegedUser={isPrivilegedUser}
                 />
               </div>
             ))

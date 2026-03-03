@@ -27,7 +27,7 @@ import api from '../api/Api';
 
 
 
-const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems}) => {
+const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems,isPrivilegedUser}) => {
 
   const features = [
     {
@@ -250,6 +250,7 @@ const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems}) => {
                         removeFromCart={()=>removeFromCart(painting.id)}
                         isInCart={cartItems && cartItems.some((item) => item.id === painting.id)}   //some vraca true/false, dok find vraca element ili undefined?
                         //^proverimo da li je već u korpi da bi dugme bilo sivo odmah pri učitavanju
+                        isPrivilegedUser={isPrivilegedUser}
                     />
                     
                 </div>

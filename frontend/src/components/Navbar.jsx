@@ -15,8 +15,11 @@ import { PiTruckLight } from "react-icons/pi";
 import { HashLink } from 'react-router-hash-link';
 
 import LogoutModal from '../modals/LogoutModal';
+
+import { GrUserAdmin } from "react-icons/gr";
+
 //Svaki put kad se state promeni → komponenta se ponovo renderuje
-const Navbar = ({ onLogin,onRegister,isAuth,onLogout,cartCount }) => {                           //treba jos dodati kad se doda slika u korpu da se pojavi kruzic na korpi sa brojem artikala i hover da kad se predje kursorom da iskoci prozor sa ariklima 
+const Navbar = ({ onLogin,onRegister,isAuth,onLogout,cartCount,isPrivilegedUser}) => {                           //treba jos dodati kad se doda slika u korpu da se pojavi kruzic na korpi sa brojem artikala i hover da kad se predje kursorom da iskoci prozor sa ariklima 
                                                 //i treba dodati efekat spustanja kad se klikne burger meni
   //const cartCount = 1;   //dodaj useState(0) za broj slika u korpi i povezi sa dugmicima dodaj u korpu
   const [isOpen, setIsOpen] = useState(false); //hook, kada zelimo da element isOpen nesto pamti (false/true stanje), preko fje setIsOpen menjamo vrednost is useState-a (false->true ili true->false)
@@ -124,13 +127,23 @@ const Navbar = ({ onLogin,onRegister,isAuth,onLogout,cartCount }) => {          
           
           <div className="col-2 korpa-kontejner">
 
-            <Link to="/korpa/" className="cart-fixed" onClick={navLinkHandler}>
-              <FiShoppingBag size={24} />
-              {cartCount > 0 ? (
-                <span className="cart-badge">{cartCount}</span>
-              ) : <></>}
-            </Link>
-            {/* Prazno - služi kao teg da bi srednja kolona ostala u centru */}
+            {isPrivilegedUser ? (
+
+              <Link to="/analiza-poslovanja/" className="cart-fixed" onClick={navLinkHandler}>
+                <GrUserAdmin size={24} />
+                
+              </Link>
+            ) : (
+              <Link to="/korpa/" className="cart-fixed" onClick={navLinkHandler}>
+                <FiShoppingBag size={24} />
+                {cartCount > 0 ? (
+                  <span className="cart-badge">{cartCount}</span>
+                ) : <></>}
+              </Link>
+            )
+            }
+
+            
           </div>
 
           {/* MOBILNI COLLAPSE (Ispod svega kad se klikne burger) */}

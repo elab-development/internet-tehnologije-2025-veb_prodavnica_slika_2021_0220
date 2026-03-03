@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BsCartPlus,BsCartDash, BsCartCheck, BsArrowRight } from "react-icons/bs";
 
-const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fotografija, onAddToCart,removeFromCart, isInCart }) => { // Dodali smo isInCart prop ako želimo da proverimo da li je već dodat spolja
+const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fotografija, onAddToCart,removeFromCart, isInCart,isPrivilegedUser }) => { // Dodali smo isInCart prop ako želimo da proverimo da li je već dodat spolja
 
   const handleAddToCart = () => {
     
@@ -43,6 +43,7 @@ const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fot
             {isInCart && (<button 
               className={`me-auto btn-add-cart ${isInCart ? 'added' : ''}`} 
               onClick={handleRemoveFromCart}
+              disabled={isPrivilegedUser}
             >
             <BsCartDash size={18} />
               Ukloni
@@ -52,7 +53,7 @@ const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fot
             <button 
               className={`btn-add-cart ${isInCart ? 'added' : ''}`} 
               onClick={handleAddToCart}
-              disabled={isInCart}
+              disabled={isInCart || isPrivilegedUser} //ako ga isInCart ne onemoguci onda ce mozda isPrivilegedUser, ako su oba false nece biti disabled
             >
               {isInCart ? <BsCartCheck size={18} /> : <BsCartPlus size={18} />}
               {isInCart ? "Dodato" : "Dodaj"}
@@ -60,9 +61,12 @@ const PaintingCard = ({ id,galerija_id,naziv,dimenzije,tehnike,cena,dostupna,fot
 
             {/* Dugme za pregled korpe (Pojavljuje se samo kad je dodato) */}
             {isInCart && (
-              <Link to="/korpa" className="btn-view-cart" title="Pregledaj korpu">
+              
+              <Link to="/korpa/" className="btn-view-cart" title="Pregledaj korpu">
                 <BsArrowRight size={18} />
+                
               </Link>
+
             )}
           </div>
           

@@ -205,8 +205,34 @@
 }
 
 
+.obavestenje{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #f8f4f1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.info{
+  border: 2px solid rgb(66, 241, 50);
+  color: rgb(66, 241, 50);
+  background-color: rgba(66, 241, 50, 0.148);
+}
+
+ .error{
+  border: 2px solid rgb(208, 9, 9);
+  color: rgb(208, 9, 9);
+  background-color: rgba(208, 9, 9, 0.171);
+}
+
+
 
 
 .leaflet-default-icon-path {
   background-image: url(https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png);
 }
+
+

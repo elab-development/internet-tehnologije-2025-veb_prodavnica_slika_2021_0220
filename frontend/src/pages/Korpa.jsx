@@ -51,9 +51,9 @@ const Korpa = ({ cartItems, removeFromCart, isAuth, onRegister,onPlaceOrder }) =
 
             return false;
           }
-          console.log(datumOd);
-          console.log(datumDo);
-          console.log(today);
+          // console.log(datumOd);
+          // console.log(datumDo);
+          // console.log(today);
 
           return datumOd <= today && today <= datumDo;
 
@@ -70,7 +70,7 @@ const Korpa = ({ cartItems, removeFromCart, isAuth, onRegister,onPlaceOrder }) =
           return vazeci(p.danOd,p.mesecOd,p.danDo,p.mesecDo);
         });
 
-        console.log(aktivan);
+        // console.log(aktivan);
 
         if (aktivan) {
           setSezonskiPopust(aktivan);
@@ -108,7 +108,7 @@ const Korpa = ({ cartItems, removeFromCart, isAuth, onRegister,onPlaceOrder }) =
   let procenatPopusta=0;
   let tipPopusta="";
 
-  console.log(sezonskiPopust);
+  // console.log(sezonskiPopust);
   if(sezonskiPopust){
     procenatPopusta=sezonskiPopust.procenat;
     tipPopusta=sezonskiPopust.tip.split('_').join(' ');

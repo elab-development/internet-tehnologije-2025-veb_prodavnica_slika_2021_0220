@@ -181,7 +181,7 @@ const Kontakt = () => {
               <div className="icon-circle-soft"><span><FiMapPin size={24} /></span></div>
               <div>
                 <h5 className="font-serif fw-bold">Lokacija</h5>
-                <p className="text-muted mb-0">{ulica}<br/>{grad}, Srbija</p>
+                <p className="text-muted mb-0">{loadingMap ? "Učitavanje..." : <>{ulica}<br/>{grad}, Srbija</>}</p>
               </div>
             </div>
 
@@ -245,14 +245,14 @@ const Kontakt = () => {
                   className="send-mes-btn py-3 px-4 rounded-3 d-flex justify-content-center align-items-center gap-2"
                   disabled={loading}
                   >
-                    <TbSend /> Pošaljite poruku
+                    <TbSend /> {loading ? "Učitavanje..." : "Pošaljite poruku"}
                   </button>
                 </div>
               </form>
             </div>
           </div>
 
-          {/* DESNA KOLONA: Mapbox interaktivna mapa */}
+          {/* DESNA KOLONA: leaflet interaktivna mapa */}
           <div className="col-lg-6">
             <div className="map-wrapper d-block h-100 w-100 position-relative">
               
@@ -285,8 +285,8 @@ const Kontakt = () => {
 
               {/* Custom info-kartica preko mape */}
               <div className="fake-map-popup" style={{zIndex:'400'}}>
-                <h6 className="fw-bold mb-1">{ulica}</h6>
-                <p className="text-muted small mb-3">{grad}, Srbija</p>
+                <h6 className="fw-bold mb-1">{loadingMap ? "Učitavanje..." : <>{ulica}</>}</h6>
+                <p className="text-muted small mb-3">{loadingMap ? "" : <>{grad}, Srbija</>}</p>
                 <a 
                   href={`https://www.google.com/maps/search/?api=1&query=${lokacija.latitude},${lokacija.longitude}`}
                   target="_blank" 
