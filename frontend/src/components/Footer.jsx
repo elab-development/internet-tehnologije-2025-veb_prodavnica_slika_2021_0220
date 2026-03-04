@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaTiktok, FaMapMarkerAlt, FaPhoneAlt, FaBuilding, FaInfoCircle, FaChevronUp } from 'react-icons/fa';
+import { MdMailOutline } from "react-icons/md";
 import './Footer.css';
 
 import { HashLink } from 'react-router-hash-link';
@@ -53,8 +54,8 @@ const Footer = () => {
                 <span>Kej srpskih sestara, Niš</span>
               </li>
               <li>
-                <FaInfoCircle className="footer-icon" />
-                <span>PIB 111122222</span>
+                <MdMailOutline className="footer-icon" style={{height:'2rem'}}/>
+                <span>pravi.izbor@danyArt.rs</span>
               </li>
               <li>
                 <FaPhoneAlt className="footer-icon" />

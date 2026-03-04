@@ -275,8 +275,8 @@ const AnalizaPoslovanja = () => {
 
             maxPorudzbina=item.Porudzbine;
             maxMesec=item.Mesec;
-            suma+=item.Porudzbine;
           }
+          suma+=item.Porudzbine;
         });
 
         setNajboljiMesec(maxMesec);
