@@ -57,3 +57,33 @@ jobs:
 
       - name: Run PHPUnit tests
         run: php artisan test
+
+  docker:
+    needs: [frontend, backend]  # čeka da testovi prođu
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # samo na main branchu
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./docker/backend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/webshop-backend:latest
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./docker/frontend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/webshop-frontend:latest

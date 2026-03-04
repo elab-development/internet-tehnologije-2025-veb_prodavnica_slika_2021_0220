@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('slike', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('galerija_id')->constrained('galerija')->nullOnDelete()->nullable();
+            $table->foreignId('galerija_id')->nullable()->constrained('galerija')->nullOnDelete();
             $table->string('putanja_fotografije');//nullable()
             $table->decimal('cena',15,2);//->unsigned()
             $table->string('naziv',50);

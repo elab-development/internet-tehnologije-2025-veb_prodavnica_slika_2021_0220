@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stavke', function (Blueprint $table) {
             $table->id();
             $table->foreignId('porudzbina_id')->constrained('porudzbine')->cascadeOnDelete();
-            $table->foreignId('slika_id')->constrained('slike')->nullOnDelete();
+            $table->foreignId('slika_id')->nullable()->constrained('slike')->nullOnDelete();
             $table->integer('rb'); //->unsigned()
             $table->decimal('cena',15,2); //->unsigned() dodaj da ukloni mogucnost negativnih
             $table->integer('kolicina')->default(1); //tinyInteger->unsigned()
