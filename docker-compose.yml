@@ -1,3 +1,4 @@
+# Browser → React → Nginx → Laravel → MySQL (Nginx je neophodan jer koristimo laravel(php) za backend)
 services:
 
   db:
