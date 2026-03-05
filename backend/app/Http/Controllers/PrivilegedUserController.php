@@ -35,10 +35,14 @@ class PrivilegedUserController extends Controller
         // ->pluck('brojP','period');  
 
         // key:value  , period:brojP
-        
-        if (DB::connection()->getDriverName() === 'sqlite') {
+
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
             $format = "strftime('%Y-%m', created_at)";           //za sqlite kojeg koriste testovi
-        } else {
+        } elseif ($driver === 'pgsql') {
+            $format = "TO_CHAR(created_at, 'YYYY-MM')";          //za postgreSql kojeg koristi cloud platforma (tipa render)
+        } else { // mysql
             $format = "DATE_FORMAT(created_at, '%Y-%m')";        //za regularni mysql
         }
 
