@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('ukupna_cena',15,2);//->unsigned() + dodaj 4 atributa za popust i tip mora biti nullable
             $table->string('ime',30);
             $table->string('prezime',30);
-            $table->enum('drzava',['Srbija'])->default('Srbija');
+            $table->string('drzava',30)->default('Srbija');   //$table->enum('drzava',['Srbija'])->default('Srbija');
             $table->string('grad',30);
             $table->string('adresa',100);
             $table->string('postanski_broj',20);
