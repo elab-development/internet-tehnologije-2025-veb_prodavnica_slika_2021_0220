@@ -42,7 +42,11 @@ function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);   // window.location.search vraca ?verified=true iz URL-a
-    
+
+    // const resetParam = params.get('reset');
+    //   const tokenParam = params.get('token');
+    //   const emailParam = params.get('email');
+
     if (params.get('verified') === 'true') {
 
       alert('Email uspešno verifikovan! Možete se prijaviti.');
@@ -51,6 +55,10 @@ function App() {
     }
 
     if(params.get('reset')==='true'){
+
+      console.log("URL search:", window.location.search);  // dodaj ovo
+      console.log("reset param:", params.get('reset'));     // i ovo
+      console.log("token:", params.get('token'));           // i ovo
 
       setResetPasswordOpen(true);
       setTokenResetPass(params.get('token'));
@@ -222,7 +230,7 @@ function App() {
           <Route path='/uslovi/' element={<UsloviKoriscenja />} />
 
           
-          <Route path="*" element={isPrivilegedUser ? <Navigate to="/analiza-poslovanja/" /> : <Navigate to="/" />} /> {/* path="*" uhvati sve URL-ove koji nisu matchovali nijednu rutu iznad" */}
+          <Route path="*" element={isPrivilegedUser ? <Navigate to="/analiza-poslovanja/" /> : <Navigate to="/" />} /> path="*" uhvati sve URL-ove koji nisu matchovali nijednu rutu iznad"
 
 
         </Routes>
@@ -253,6 +261,13 @@ function App() {
         isAuth={isAuth}
         cartItems={cartItems}
         setCartItems={setCartItems}
+      />
+
+      <PasswordResetModal
+        show={resetPasswordOpen}
+        onClose={() => setResetPasswordOpen(false)}
+        token={tokenResetPass}
+        email={emailResetPass}
       />
 
 
