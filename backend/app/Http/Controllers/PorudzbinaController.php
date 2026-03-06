@@ -291,7 +291,7 @@ class PorudzbinaController extends Controller
 
         })->sortByDesc('procenat')->first(); //sortByDesc sluzi za sortiranje php kolekcije koju smo pomocu get dobili, orderby bi moglo pre get i sluzi za sortiranje u bazi ako postoji više popusta, uzmi najveći
 
-        if(!$popust){
+        if(!$popust || $popust->procenat<10){
 
             $data['popust_id']=null;
             $data['procenat_popusta_ss']=10;   //ulogovani ima difoltno 10%
