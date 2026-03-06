@@ -109,7 +109,7 @@ const Korpa = ({ cartItems, removeFromCart, isAuth, onRegister,onPlaceOrder }) =
   let tipPopusta="";
 
   // console.log(sezonskiPopust);
-  if(sezonskiPopust){
+  if(sezonskiPopust && (sezonskiPopust.procenat>10 || !isAuth)){
     procenatPopusta=sezonskiPopust.procenat;
     tipPopusta=sezonskiPopust.tip.split('_').join(' ');
     tipPopusta=
