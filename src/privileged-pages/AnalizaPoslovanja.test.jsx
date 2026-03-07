@@ -55,7 +55,7 @@ test('poziva api.post kada se forma pošalje', async () => {
   const nazivInput = screen.getByPlaceholderText(/Naziv slike/i);         //screen koristimo da nadjemo element na stranici (ovde input polje sa placeholderom)
   await userEvent.type(nazivInput, "Test slika");                         //userEvent.type simulira korisnikovo kucanje "Test slika"
 
-  const submitButton = screen.getByRole('button', { name: /Pošaljite poruku/i });
+  const submitButton = screen.getByRole('button', { name: /Dodajte sliku/i });
   await userEvent.click(submitButton);
 
   await waitFor(() => {
@@ -77,7 +77,7 @@ test('prikazuje grešku za negativne vrednosti', async () => {
   await userEvent.clear(cenaInput);
   await userEvent.type(cenaInput, "-100");
 
-  const submitButton = screen.getByRole('button', { name: /Pošaljite poruku/i });
+  const submitButton = screen.getByRole('button', { name: /Dodajte sliku/i });
   await userEvent.click(submitButton);
 
   expect(await screen.findByText(/ne smeju biti negativne/i))
