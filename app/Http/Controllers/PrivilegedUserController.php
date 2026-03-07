@@ -120,13 +120,13 @@ class PrivilegedUserController extends Controller
 
         //     $file=$request->file('putanja_fotografije');
 
-        //     $extension=$file->getClientOriginalExtension(); //jpg npr.
-        //     $fileName=Str::slug($request->naziv) . '.' . $extension;  //Str::slug(string) dodaje - na prazna mesta i na jos nacina prilagodjava string url-u (radi kao URL.createObjectUrl(string)) gde je string deo ili ceo file path
+            // $extension=$file->getClientOriginalExtension(); //jpg npr.
+            // $fileName=Str::slug($request->naziv) . '.' . $extension;  //Str::slug(string) dodaje - na prazna mesta i na jos nacina prilagodjava string url-u (radi kao URL.createObjectUrl(string)) gde je string deo ili ceo file path
 
-        //     $path=$file->storeAs('fotografije',$fileName,'public');
+            // $path=$file->storeAs('fotografije',$fileName,'public');
 
-        //     // $path=$request->file('putanja_fotografije')->store('fotografije','public');  //necemo ovako da bismo mu mi kreirali ime (da ne bude random)
-        //     $data['putanja_fotografije']=$path;
+            // // $path=$request->file('putanja_fotografije')->store('fotografije','public');  //necemo ovako da bismo mu mi kreirali ime (da ne bude random)
+            // $data['putanja_fotografije']=$path;
         // }
 
 
@@ -136,12 +136,24 @@ class PrivilegedUserController extends Controller
 
             $file=$request->file('putanja_fotografije');
 
-            $uploadedFile=cloudinary()->uploadApi()->upload($file->getRealPath(),[
-                'folder'=>'fotografije',
-                'public_id'=>Str::slug($request->naziv)
-            ]);
+            if(app()->environment('testing')){       //ako se radi testiranje radi ga po starom
 
-            $data['putanja_fotografije'] = $uploadedFile['secure_url'];
+                $extension=$file->getClientOriginalExtension(); //jpg npr.
+                $fileName=Str::slug($request->naziv) . '.' . $extension;  //Str::slug(string) dodaje - na prazna mesta i na jos nacina prilagodjava string url-u (radi kao URL.createObjectUrl(string)) gde je string deo ili ceo file path
+
+                $path=$file->storeAs('fotografije',$fileName,'public');
+
+                // $path=$request->file('putanja_fotografije')->store('fotografije','public');  //necemo ovako da bismo mu mi kreirali ime (da ne bude random)
+                $data['putanja_fotografije']=$path;
+            }
+            else {
+                $uploadedFile=cloudinary()->uploadApi()->upload($file->getRealPath(),[
+                    'folder'=>'fotografije',
+                    'public_id'=>Str::slug($request->naziv)
+                ]);
+
+                $data['putanja_fotografije'] = $uploadedFile['secure_url'];
+            }
         }
 
         $tehnike=$data['tehnike'];
