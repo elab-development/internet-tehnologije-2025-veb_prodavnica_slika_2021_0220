@@ -230,7 +230,8 @@ function App() {
           <Route path='/uslovi/' element={<UsloviKoriscenja />} />
 
           
-          <Route path="*" element={isPrivilegedUser ? <Navigate to="/analiza-poslovanja/" /> : <Navigate to="/" />} /> path="*" uhvati sve URL-ove koji nisu matchovali nijednu rutu iznad"
+          <Route path="*" element={isPrivilegedUser ? <Navigate to="/analiza-poslovanja/" /> : <Navigate to="/" />} /> 
+          {/* ^path="*" uhvati sve URL-ove koji nisu matchovali nijednu rutu iznad" */}
 
 
         </Routes>

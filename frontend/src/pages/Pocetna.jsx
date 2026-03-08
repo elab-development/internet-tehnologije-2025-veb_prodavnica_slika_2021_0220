@@ -132,7 +132,7 @@ const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems,isPrivil
           tehnike: slika.tehnike.map((t) => t.naziv).join(', '), // Tehnika kao string
           cena: `${slika.cena} RSD`,
           dostupna: slika.dostupna,
-          fotografija: `http://localhost:8000/storage/${slika.putanja_fotografije}` // Laravel storage URL
+          fotografija: slika.putanja_fotografije.startsWith('http') ? slika.putanja_fotografije : `http://localhost:8000/storage/${slika.putanja_fotografije}`, // Laravel storage URL
         }));
         
         setLatestPaintings(paintings);

@@ -210,6 +210,12 @@ const AnalizaPoslovanja = () => {
 
       const isMicroMobile=window.innerWidth<450;
 
+      const maxVrednost=Math.max(...podaci.slice(1).map(p=>p[1]));//slice(1) je kao offset 1 tj. preskoci 1. element
+                                                                  //sa p[1] pristupamo kljucevima (brojevima porudzbina)
+                                                                  //spread operator (...) koristimo kako bi raspakovali niz koji map pravi:
+                                                                  // Math.max([0, 1, 3])  // NaN - ne radi!
+                                                                  // Math.max(0, 1, 3)    // 3 - radi!
+
       const options = {         //ovu hardcore stilizaciju gpt radi iskljucivo
         legend: { position: 'none' },
         backgroundColor: 'transparent',
@@ -226,7 +232,7 @@ const AnalizaPoslovanja = () => {
           gridlines: { color: '#f0f0f0', count: 5 },
           baselineColor: '#f0f0f0',
           minValue: 0,
-          viewWindow: { min: -5 },
+          viewWindow: { min: maxVrednost<=10 ? -0.9 : -5 },
         },
         lineWidth: isMobile ? 2 : 2.5,
         colors: ['#7a1528'],
@@ -611,7 +617,7 @@ const AnalizaPoslovanja = () => {
            disabled={loadingSlike}
             type="submit"
             >
-            {loadingSlike ? "Učitavanje..." : "Pošaljite poruku"}
+            {loadingSlike ? "Učitavanje..." : "Dodajte sliku"}
             </button>  {/* type="submit" i form da ima onsubmit={handler} */}
         </div>
         </form>

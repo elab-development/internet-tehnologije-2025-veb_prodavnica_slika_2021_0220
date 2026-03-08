@@ -198,8 +198,10 @@ const Kontakt = () => {
                   <input type="email" name="email" value={formData.email} className="form-control form-control-custom" placeholder="your@gmail.com" onChange={handleInputChange} required />
                 </div>
                 <div className="mb-4">
-                  <label className="form-label text-muted small">Poruka</label>
-                  <textarea name="poruka" value={formData.poruka} className="form-control form-control-custom" rows="4" placeholder="Recite kako možemo da Vam pomognemo..." onChange={handleInputChange} required></textarea>
+                  <label className="form-label text-muted small">Poruka
+                    <span className="hint" style={{color:'grey'}}> ({formData.poruka.length}/1000)</span>
+                  </label>
+                  <textarea name="poruka" value={formData.poruka} className="form-control form-control-custom" rows="4" placeholder="Recite kako možemo da Vam pomognemo..." onChange={handleInputChange} required maxLength={1000}></textarea>
                 </div>
                 {/* textarea tag omogucava korisniku da prosiruje input polje */}
 
