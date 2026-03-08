@@ -88,16 +88,16 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/webshop-frontend:latest
 
-  # deploy:
-  #   needs: [docker]
-  #   runs-on: ubuntu-latest
-  #   if: github.ref == 'refs/heads/main'
-  #   steps:
-  #     - name: Deploy backend to Render
-  #       run: curl "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
+  deploy:
+    needs: [docker]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy backend to Render
+        run: curl "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK }}"
 
-  #     - name: Deploy frontend to Render
-  #       run: curl "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}"
+      - name: Deploy frontend to Render
+        run: curl "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK }}"
 
 
 
