@@ -15,7 +15,7 @@ class UserMessageController extends Controller
         $validator=Validator::make($request->all(),[
             'ime'=>'required|string|max:255',
             'email'=>'required|email|string|max:255',
-            'poruka'=>'required|string',
+            'poruka'=>'required|string|1000',
             'slike'=>'sometimes|array',
             'slike.*'=>['image','mimes:jpg,png,jpeg','max:2048']
         ]);

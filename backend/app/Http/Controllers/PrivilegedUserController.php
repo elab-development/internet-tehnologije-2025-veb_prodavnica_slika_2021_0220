@@ -47,7 +47,8 @@ class PrivilegedUserController extends Controller
         }
 
         $porudbine = DB::table('porudzbine')
-            ->selectRaw("$format as period, COUNT(*) as brojP")  //sirov sql
+            ->selectRaw("$format as period, COUNT(*) as \"brojP\"")// ->selectRaw("$format as period, COUNT(*) as brojP")  //sirov sql
+            ->where('created_at','>=',Carbon::now()->subMonths(12))  
             ->groupBy('period')
             ->orderBy('period')
             ->pluck('brojP', 'period');
@@ -95,7 +96,7 @@ class PrivilegedUserController extends Controller
         $validator=Validator::make($request->all(),[
             'galerija_id'=>['nullable','integer','exists:galerija,id'],
             // 'putanja_fotografije'=>['nullable','string',new PostojiPutanjaSlike()],
-            'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba: php artisan storage:link
+            'putanja_fotografije'=>['nullable','image','mimes:jpg,png,jpeg','max:2048'], //treba: php artisan storage:link  //,'mimes:jpg,png,jpeg','max:2048'
             'cena'=>['required','numeric','min:0'],
             'naziv'=>['required','string','max:50'],
             'visina_cm'=>['required','numeric','min:0'],
@@ -113,17 +114,46 @@ class PrivilegedUserController extends Controller
         }
         $data=$validator->validated();
 
+        // ovo ispod je postupak za cuvanje u storage laravelovom folderu koji se ne pushuje na github
+
+        // if($request->hasFile('putanja_fotografije')){
+
+        //     $file=$request->file('putanja_fotografije');
+
+            // $extension=$file->getClientOriginalExtension(); //jpg npr.
+            // $fileName=Str::slug($request->naziv) . '.' . $extension;  //Str::slug(string) dodaje - na prazna mesta i na jos nacina prilagodjava string url-u (radi kao URL.createObjectUrl(string)) gde je string deo ili ceo file path
+
+            // $path=$file->storeAs('fotografije',$fileName,'public');
+
+            // // $path=$request->file('putanja_fotografije')->store('fotografije','public');  //necemo ovako da bismo mu mi kreirali ime (da ne bude random)
+            // $data['putanja_fotografije']=$path;
+        // }
+
+
+        //ovo ispod je postupak da se fotografije cuvaju na cloudinary-u
+
         if($request->hasFile('putanja_fotografije')){
 
             $file=$request->file('putanja_fotografije');
 
-            $extension=$file->getClientOriginalExtension(); //jpg npr.
-            $fileName=Str::slug($request->naziv) . '.' . $extension;  //Str::slug(string) dodaje - na prazna mesta i na jos nacina prilagodjava string url-u (radi kao URL.createObjectUrl(string)) gde je string deo ili ceo file path
+            if(app()->environment('testing')){       //ako se radi testiranje radi ga po starom
 
-            $path=$file->storeAs('fotografije',$fileName,'public');
+                $extension=$file->getClientOriginalExtension(); //jpg npr.
+                $fileName=Str::slug($request->naziv) . '.' . $extension;  //Str::slug(string) dodaje - na prazna mesta i na jos nacina prilagodjava string url-u (radi kao URL.createObjectUrl(string)) gde je string deo ili ceo file path
 
-            // $path=$request->file('putanja_fotografije')->store('fotografije','public');  //necemo ovako da bismo mu mi kreirali ime (da ne bude random)
-            $data['putanja_fotografije']=$path;
+                $path=$file->storeAs('fotografije',$fileName,'public');
+
+                // $path=$request->file('putanja_fotografije')->store('fotografije','public');  //necemo ovako da bismo mu mi kreirali ime (da ne bude random)
+                $data['putanja_fotografije']=$path;
+            }
+            else {
+                $uploadedFile=cloudinary()->uploadApi()->upload($file->getRealPath(),[
+                    'folder'=>'fotografije',
+                    'public_id'=>Str::slug($request->naziv)
+                ]);
+
+                $data['putanja_fotografije'] = $uploadedFile['secure_url'];
+            }
         }
 
         $tehnike=$data['tehnike'];
