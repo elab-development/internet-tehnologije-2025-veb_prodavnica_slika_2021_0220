@@ -13,6 +13,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -742,7 +743,9 @@ class PorudzbinaController extends Controller
     )]
     public function moje(Request $request){
 
-        $userId=$request->user()->id;
+        // $userId=$request->user()->id;
+
+        $userId=Auth::user()->id;
 
         $porudzbine=Porudzbina::with(['stavke.slika','popust'])->where('user_id',$userId)
         ->orderByDesc('datum')
