@@ -7,11 +7,18 @@ use App\Models\Tehnika;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use OpenApi\Attributes as OA;
+
 class TehnikaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/tehnike',
+        summary: 'Vraća sve tehnike',
+        tags: ['Tehnike'],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista tehnika')
+        ]
+    )]
     public function index()
     {
         return response()->json(TehnikaResource::collection(Tehnika::all()),200);
@@ -25,9 +32,31 @@ class TehnikaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/tehnike',
+        summary: 'Kreira novu tehniku',
+        tags: ['Tehnike'],
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['naziv'],
+                    properties: [
+                        new OA\Property(property: 'naziv', type: 'string', example: 'Akvarel')
+                    ],
+                    type: 'object'
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Tehnika kreirana'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
@@ -44,9 +73,18 @@ class TehnikaController extends Controller
         return response()->json(new TehnikaResource($tehnika),201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: '/api/tehnike/{id}',
+        summary: 'Vraća jednu tehniku',
+        tags: ['Tehnike'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Tehnika'),
+            new OA\Response(response: 404, description: 'Tehnika nije pronađena')
+        ]
+    )]
     public function show($id)
     {
         return response()->json(new TehnikaResource(Tehnika::findOrFail($id)),200);
@@ -60,9 +98,33 @@ class TehnikaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Put(
+        path: '/api/tehnike/{id}',
+        summary: 'Ažurira tehniku',
+        tags: ['Tehnike'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        requestBody: new OA\RequestBody(
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    properties: [
+                        new OA\Property(property: 'naziv', type: 'string', example: 'Akvarel')
+                    ],
+                    type: 'object'
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Tehnika ažurirana'),
+            new OA\Response(response: 400, description: 'Nema podataka za izmenu'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $tehnika=Tehnika::findOrFail($id);
@@ -86,9 +148,21 @@ class TehnikaController extends Controller
         return response()->json(new TehnikaResource($tehnika),200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[OA\Delete(
+        path: '/api/tehnike/{id}',
+        summary: 'Briše tehniku',
+        tags: ['Tehnike'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Tehnika obrisana'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup'),
+            new OA\Response(response: 422, description: 'Tehnika se koristi na slikama')
+        ]
+    )]
     public function destroy($id)
     {
         $tehnika=Tehnika::findOrFail($id);

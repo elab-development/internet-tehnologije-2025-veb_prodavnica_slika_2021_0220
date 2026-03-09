@@ -13,8 +13,32 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
+use OpenApi\Attributes as OA;
+
 class ForgotPasswordController extends Controller
 {
+    #[OA\Post(
+        path: '/api/password/forgot',
+        summary: 'Slanje linka za reset lozinke',
+        description: 'Generiše reset token i šalje email sa linkom ka frontend stranici. Iz bezbednosnih razloga vraća isti odgovor bez obzira da li nalog postoji ili ne.',
+        tags: ['Autentifikacija'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['email'],
+                    properties: [
+                        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'marko@example.com'),
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Email sa uputstvima je poslat (ili nalog ne postoji — odgovor je isti namerno)'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function sendResetLink(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -99,7 +123,32 @@ class ForgotPasswordController extends Controller
     //     );
     // }
 
-
+    #[OA\Post(
+        path: '/api/password/reset',
+        summary: 'Resetovanje lozinke',
+        description: 'Proverava token iz emaila i postavlja novu lozinku. Token važi 60 minuta od slanja.',
+        tags: ['Autentifikacija'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['token', 'email', 'password', 'password_confirmation'],
+                    properties: [
+                        new OA\Property(property: 'token', type: 'string', example: 'abc123xyz...'),
+                        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'marko@example.com'),
+                        new OA\Property(property: 'password', type: 'string', format: 'password', minLength: 6, example: 'novaLozinka123'),
+                        new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', minLength: 6, example: 'novaLozinka123'),
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Lozinka uspešno resetovana'),
+            new OA\Response(response: 400, description: 'Neispravan token, email ili istekao token'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [

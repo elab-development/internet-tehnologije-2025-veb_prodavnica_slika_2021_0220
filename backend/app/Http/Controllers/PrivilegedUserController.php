@@ -12,15 +12,25 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
+use OpenApi\Attributes as OA;
+
 class PrivilegedUserController extends Controller
 {
 
     //DODAJ LOGIKU ZA BANOVANJE KUPACA KOJI NPR. NE PREUZIMAJU POSILJE NAKON PORUCIVANJA (SOFT DELETE ILI FORCE DELETE)
     //dodavanje,brisanje,izmenu tehnika,popusta i slika (imas dodavanje slika)
     
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/mesecniBrojPorudzbina',
+        summary: 'Broj porudžbina po mesecima (poslednjih 12 meseci)',
+        tags: ['Admin/Slikar statistika'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista porudžbina po mesecima'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup')
+        ]
+    )]
     public function mesecniBrojPorudzbina()
     {
         
@@ -88,9 +98,46 @@ class PrivilegedUserController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/slike',
+        summary: 'Dodavanje nove slike',
+        tags: ['Slike'],
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(
+                    required: ['naziv','cena','visina_cm','sirina_cm','dostupna','tehnike'],
+                    properties: [
+                        new OA\Property(property: 'naziv', type: 'string', example: 'Sunset'),
+                        new OA\Property(property: 'cena', type: 'number', example: 15000),
+                        new OA\Property(property: 'visina_cm', type: 'number', example: 50),
+                        new OA\Property(property: 'sirina_cm', type: 'number', example: 70),
+                        new OA\Property(property: 'dostupna', type: 'boolean', example: true),
+                        new OA\Property(property: 'galerija_id', type: 'integer', example: 1),
+                        new OA\Property(
+                            property: 'putanja_fotografije',
+                            type: 'string',
+                            format: 'binary'
+                        ),
+                        new OA\Property(
+                            property: 'tehnike',
+                            type: 'array',
+                            items: new OA\Items(type: 'integer')
+                        )
+                    ],
+                    type: 'object'
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Slika kreirana'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function dodajSliku(Request $request)
     {
         $validator=Validator::make($request->all(),[

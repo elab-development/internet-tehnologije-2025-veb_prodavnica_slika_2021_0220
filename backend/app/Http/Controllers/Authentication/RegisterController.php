@@ -10,8 +10,36 @@ use Illuminate\Support\Facades\Mail;      //
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
+use OpenApi\Attributes as OA;
+
 class RegisterController extends Controller
 {
+    #[OA\Post(
+        path: '/api/register',
+        summary: 'Registracija novog korisnika',
+        description: 'Kreira novi korisnički nalog i šalje email sa verifikacionim linkom. Link je vremenski ograničen na 60 minuta.',
+        tags: ['Autentifikacija'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['ime', 'prezime', 'email', 'password', 'password_confirmation'],
+                    properties: [
+                        new OA\Property(property: 'ime', type: 'string', maxLength: 50, example: 'Marko'),
+                        new OA\Property(property: 'prezime', type: 'string', maxLength: 50, example: 'Marković'),
+                        new OA\Property(property: 'email', type: 'string', format: 'email', maxLength: 255, example: 'marko@example.com'),
+                        new OA\Property(property: 'password', type: 'string', format: 'password', minLength: 6, example: 'tajna123'),
+                        new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', minLength: 6, example: 'tajna123'),
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Registracija uspešna — verifikacioni email je poslat'),
+            new OA\Response(response: 422, description: 'Validaciona greška (npr. email već postoji, lozinke se ne poklapaju)')
+        ]
+    )]
     public function register(Request $request)
     {
         $validator=Validator::make($request->all(),[
