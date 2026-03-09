@@ -6,11 +6,18 @@ use App\Http\Resources\GalerijaResource;
 use App\Models\Galerija;
 use Illuminate\Http\Request;
 
+use OpenApi\Attributes as OA;
+// ['']  \  @
 class GalerijaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\get(
+        path: '/api/galerija',
+        summary: 'Vraća sve galerije',
+        tags: ['Galerija'],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista svih galerija')
+        ]
+    )]
     public function index()
     {
         $galerija=Galerija::first();
@@ -33,9 +40,23 @@ class GalerijaController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\get(
+        path: '/api/galerija/{id}',
+        summary: 'Vraća jednu galeriju',
+        tags: ['Galerija'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Galerija'),
+            new OA\Response(response: 404, description: 'Galerija nije pronađena'),
+        ]
+    )]
     public function show($id)
     {
         return response()->json(new GalerijaResource(Galerija::findOrFail($id)),200);

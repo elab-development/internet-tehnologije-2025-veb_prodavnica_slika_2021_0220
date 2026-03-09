@@ -9,16 +9,35 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Stmt\TryCatch;
 
+use OpenApi\Attributes as OA;
+
 class PopustController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/popusti',
+        summary: 'Vraća sve popuste',
+        tags: ['Popusti'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista svih popusta'),
+            new OA\Response(response: 401, description: 'Neautorizovan')
+        ]
+    )]
     public function index()
     {
         return response()->json(PopustResource::collection(Popust::all()),200);
     }
 
+    #[OA\Get(
+        path: '/api/popusti-aktivni',
+        summary: 'Vraća sve aktivne popuste',
+        tags: ['Popusti'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista aktivnih popusta'),
+            new OA\Response(response: 401, description: 'Neautorizovan')
+        ]
+    )]
     public function aktivniPopusti()
     {
         return response()->json(PopustResource::collection(Popust::where('aktivan',true)->get()),200);
@@ -32,9 +51,36 @@ class PopustController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/popusti',
+        summary: 'Kreiranje novog popusta',
+        description: 'Kreira popust sa definisanim periodom važenja (dan/mesec od–do). Period ne sme biti duži od 31 dan. Podržani su popusti koji prelaze godišnju granicu (npr. 25.12 – 05.01).',
+        tags: ['Popusti'],
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['aktivan', 'tip', 'procenat', 'danOd', 'mesecOd', 'danDo', 'mesecDo'],
+                    properties: [
+                        new OA\Property(property: 'aktivan', type: 'boolean', example: true),
+                        new OA\Property(property: 'tip', type: 'string', maxLength: 50, example: 'praznik'),
+                        new OA\Property(property: 'procenat', type: 'integer', minimum: 1, maximum: 100, example: 15),
+                        new OA\Property(property: 'danOd', type: 'integer', minimum: 1, maximum: 31, example: 24),
+                        new OA\Property(property: 'mesecOd', type: 'integer', minimum: 1, maximum: 12, example: 12),
+                        new OA\Property(property: 'danDo', type: 'integer', minimum: 1, maximum: 31, example: 1),
+                        new OA\Property(property: 'mesecDo', type: 'integer', minimum: 1, maximum: 12, example: 1),
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Popust kreiran'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 422, description: 'Validaciona greška (npr. period duži od 31 dan ili neispravan datum)')
+        ]
+    )]
     public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
@@ -95,9 +141,20 @@ class PopustController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: '/api/popusti/{id}',
+        summary: 'Vraća jedan popust po ID-u',
+        tags: ['Popusti'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Popust'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 404, description: 'Popust nije pronađen')
+        ]
+    )]
     public function show($id)
     {
         $popust=Popust::findOrFail($id);
@@ -112,9 +169,39 @@ class PopustController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Put(
+        path: '/api/popusti/{id}',
+        summary: 'Izmena popusta',
+        description: 'Sva polja su opciona. Ako se menja period (danOd/mesecOd/danDo/mesecDo), moraju se proslediti sva četiri datumska polja. Period ne sme biti duži od 31 dan.',
+        tags: ['Popusti'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        requestBody: new OA\RequestBody(
+            required: false,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    properties: [
+                        new OA\Property(property: 'aktivan', type: 'boolean', example: false),
+                        new OA\Property(property: 'tip', type: 'string', maxLength: 50, example: 'praznik'),
+                        new OA\Property(property: 'procenat', type: 'integer', minimum: 1, maximum: 100, example: 20),
+                        new OA\Property(property: 'danOd', type: 'integer', minimum: 1, maximum: 31, example: 24),
+                        new OA\Property(property: 'mesecOd', type: 'integer', minimum: 1, maximum: 12, example: 12),
+                        new OA\Property(property: 'danDo', type: 'integer', minimum: 1, maximum: 31, example: 31),
+                        new OA\Property(property: 'mesecDo', type: 'integer', minimum: 1, maximum: 12, example: 12),
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Popust izmenjen'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 404, description: 'Popust nije pronađen'),
+            new OA\Response(response: 422, description: 'Validaciona greška (npr. nepotpuni datumski podaci ili period duži od 31 dan)')
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $popust=Popust::findOrFail($id);
@@ -194,9 +281,20 @@ class PopustController extends Controller
         return response()->json(new PopustResource($popust),200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[OA\Delete(
+        path: '/api/popusti/{id}',
+        summary: 'Brisanje popusta',
+        tags: ['Popusti'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Popust obrisan'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 404, description: 'Popust nije pronađen')
+        ]
+    )]
     public function destroy($id)
     {
         $popust=Popust::findOrFail($id);

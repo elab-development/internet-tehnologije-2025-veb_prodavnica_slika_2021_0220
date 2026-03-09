@@ -11,17 +11,32 @@ use App\Rules\PostojiPutanjaSlike;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\HttpCache\Store;
 
+use OpenApi\Attributes as OA;
+
 class SlikaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/slike',
+        summary: 'Vraća sve slike',
+        tags: ['Slike'],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista slika')
+        ]
+    )]
     public function index() //Request $request
     {
         $slike=Slika::with(['galerija','tehnike'])->get();
         return response()->json(SlikaResource::collection($slike),200);
     }
 
+    #[OA\Get(
+        path: '/api/slike/latest',
+        summary: 'Vraća 3 najnovije dostupne slike',
+        tags: ['Slike'],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista najnovijih slika')
+        ]
+    )]
     public function latest(){
         $slike=Slika::with(['galerija','tehnike'])
                             ->where('dostupna',true) //kad budes imao dovoljno slika u bazi otkomentarisaces ovo
@@ -32,6 +47,28 @@ class SlikaController extends Controller
 
     }
 
+    #[OA\Get(
+        path: '/api/slike/filter',
+        summary: 'Vraća paginirane i filtrirane slike',
+        tags: ['Slike'],
+        parameters: [
+            new OA\Parameter(name: 'per_page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 20)),
+            new OA\Parameter(name: 'dostupna', in: 'query', required: false, schema: new OA\Schema(type: 'boolean')),
+            new OA\Parameter(name: 'cena_min', in: 'query', required: false, schema: new OA\Schema(type: 'number', minimum: 0)),
+            new OA\Parameter(name: 'cena_max', in: 'query', required: false, schema: new OA\Schema(type: 'number', minimum: 0)),
+            new OA\Parameter(name: 'visina_cm_min', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 0)),
+            new OA\Parameter(name: 'visina_cm_max', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 0)),
+            new OA\Parameter(name: 'sirina_cm_min', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 0)),
+            new OA\Parameter(name: 'sirina_cm_max', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 0)),
+            new OA\Parameter(name: 'sort_cena', in: 'query', required: false, schema: new OA\Schema(type: 'string', enum: ['asc', 'desc'])),
+            new OA\Parameter(name: 'sort_starost', in: 'query', required: false, schema: new OA\Schema(type: 'string', enum: ['asc', 'desc'])),
+            new OA\Parameter(name: 'tehnike[]', in: 'query', required: false, schema: new OA\Schema(type: 'array', items: new OA\Items(type: 'integer')))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Paginirana lista slika'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function allPicturesPaginatedFiltered(Request $request){
 
         $request->validate([           //isto kao $validator=Validator::make() + if($validator->fails())
@@ -148,9 +185,38 @@ class SlikaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // #[OA\Post(
+    //     path: '/api/slike',
+    //     summary: 'Kreira novu sliku',
+    //     tags: ['Slike'],
+    //     security: [['sanctum' => []]],
+    //     requestBody: new OA\RequestBody(
+    //         required: true,
+    //         content: new OA\MediaType(
+    //             mediaType: 'multipart/form-data',
+    //             schema: new OA\Schema(
+    //                 required: ['galerija_id', 'cena', 'naziv', 'visina_cm', 'sirina_cm', 'dostupna', 'tehnike'],
+    //                 properties: [
+    //                     new OA\Property(property: 'galerija_id', type: 'integer', example: 1),
+    //                     new OA\Property(property: 'putanja_fotografije', type: 'string', format: 'binary'),
+    //                     new OA\Property(property: 'cena', type: 'number', example: 150.00),
+    //                     new OA\Property(property: 'naziv', type: 'string', example: 'Jutarnji pejzaž'),
+    //                     new OA\Property(property: 'visina_cm', type: 'number', example: 60),
+    //                     new OA\Property(property: 'sirina_cm', type: 'number', example: 80),
+    //                     new OA\Property(property: 'dostupna', type: 'boolean', example: true),
+    //                     new OA\Property(property: 'tehnike', type: 'array', items: new OA\Items(type: 'integer'), example: [1, 2])
+    //                 ],
+    //                 type: 'object'
+    //             )
+    //         )
+    //     ),
+    //     responses: [
+    //         new OA\Response(response: 201, description: 'Slika kreirana'),
+    //         new OA\Response(response: 401, description: 'Neautorizovan'),
+    //         new OA\Response(response: 403, description: 'Zabranjen pristup'),
+    //         new OA\Response(response: 422, description: 'Validaciona greška')
+    //     ]
+    // )]
     public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
@@ -192,9 +258,18 @@ class SlikaController extends Controller
         return response()->json(new SlikaResource($slika),201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: '/api/slike/{id}',
+        summary: 'Vraća jednu sliku',
+        tags: ['Slike'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Slika'),
+            new OA\Response(response: 404, description: 'Slika nije pronađena')
+        ]
+    )]
     public function show($id)
     {
         $slika=Slika::with(['galerija','tehnike'])->findOrFail($id);
@@ -209,9 +284,41 @@ class SlikaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/slike/{id}',
+        summary: 'Ažurira sliku (koristi POST + _method=PUT zbog multipart/form-data)',
+        tags: ['Slike'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        requestBody: new OA\RequestBody(
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(
+                    properties: [
+                        new OA\Property(property: '_method', type: 'string', example: 'PUT'),
+                        new OA\Property(property: 'galerija_id', type: 'integer', example: 1),
+                        new OA\Property(property: 'putanja_fotografije', type: 'string', format: 'binary'),
+                        new OA\Property(property: 'cena', type: 'number', example: 200.00),
+                        new OA\Property(property: 'naziv', type: 'string', example: 'Jutarnji pejzaž'),
+                        new OA\Property(property: 'visina_cm', type: 'number', example: 60),
+                        new OA\Property(property: 'sirina_cm', type: 'number', example: 80),
+                        new OA\Property(property: 'dostupna', type: 'boolean', example: true),
+                        new OA\Property(property: 'tehnike', type: 'array', items: new OA\Items(type: 'integer'), example: [1, 3])
+                    ],
+                    type: 'object'
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Slika ažurirana'),
+            new OA\Response(response: 400, description: 'Nema podataka za izmenu'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup'),
+            new OA\Response(response: 422, description: 'Validaciona greška')
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $slika=Slika::findOrFail($id);
@@ -266,9 +373,21 @@ class SlikaController extends Controller
     
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[OA\Delete(
+        path: '/api/slike/{id}',
+        summary: 'Briše sliku',
+        tags: ['Slike'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Slika obrisana'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 403, description: 'Zabranjen pristup'),
+            new OA\Response(response: 404, description: 'Slika nije pronađena')
+        ]
+    )]
     public function destroy($id)
     {
         $slika=Slika::findOrFail($id);

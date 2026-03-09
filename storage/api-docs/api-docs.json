@@ -1,0 +1,1784 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Online image shop API",
+        "description": "API za upravljanje porudžbinama, slikama, tehnikama slikanja, popustima i korisnicima kroz autentifikaciju i autorizaciju",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/verify/email/{id}": {
+            "get": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Verifikacija email adrese",
+                "description": "Potvrđuje email korisnika putem potpisanog linka iz verifikacionog emaila. Nakon uspešne verifikacije preusmerava na frontend. Link je vremenski ograničen i mora imati validan Laravelov potpis.",
+                "operationId": "8ab8bd0f1e37501b0e7e2f3c51968331",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID korisnika",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "expires",
+                        "in": "query",
+                        "description": "Unix timestamp isteka linka (dodaje Laravel automatski)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "description": "HMAC potpis linka (dodaje Laravel automatski)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email već verifikovan"
+                    },
+                    "302": {
+                        "description": "Verifikacija uspešna — preusmeravanje na frontend (?verified=true)"
+                    },
+                    "401": {
+                        "description": "Link je istekao ili potpis nije validan"
+                    },
+                    "404": {
+                        "description": "Korisnik nije pronađen"
+                    }
+                }
+            }
+        },
+        "/api/password/forgot": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Slanje linka za reset lozinke",
+                "description": "Generiše reset token i šalje email sa linkom ka frontend stranici. Iz bezbednosnih razloga vraća isti odgovor bez obzira da li nalog postoji ili ne.",
+                "operationId": "f04d4e3dc3511db809c9c5b7421397b5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "marko@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sa uputstvima je poslat (ili nalog ne postoji — odgovor je isti namerno)"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/password/reset": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Resetovanje lozinke",
+                "description": "Proverava token iz emaila i postavlja novu lozinku. Token važi 60 minuta od slanja.",
+                "operationId": "70343be00a3e79dce6852b38e38e4973",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "abc123xyz..."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "marko@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "novaLozinka123",
+                                        "minLength": 6
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "novaLozinka123",
+                                        "minLength": 6
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lozinka uspešno resetovana"
+                    },
+                    "400": {
+                        "description": "Neispravan token, email ili istekao token"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Prijava korisnika",
+                "description": "Proverava kredencijale i vraća Sanctum token. Email mora biti verifikovan pre prijave.",
+                "operationId": "a344553a2189e0d2100ee8c82da4aaa8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "marko@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "tajna123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Uspešna prijava — vraća token i podatke o korisniku",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Uspesno ste se prijavili"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abc123xyz..."
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Pogrešan email ili lozinka"
+                    },
+                    "403": {
+                        "description": "Email nije verifikovan"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Odjava korisnika",
+                "description": "Briše sve Sanctum tokene trenutno ulogovanog korisnika.",
+                "operationId": "c4bc9699bace461f50e3069ea31b7a23",
+                "responses": {
+                    "200": {
+                        "description": "Uspešna odjava"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Autentifikacija"
+                ],
+                "summary": "Registracija novog korisnika",
+                "description": "Kreira novi korisnički nalog i šalje email sa verifikacionim linkom. Link je vremenski ograničen na 60 minuta.",
+                "operationId": "bdfa3c042ac567afbea7fe36259d5152",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ime",
+                                    "prezime",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "ime": {
+                                        "type": "string",
+                                        "example": "Marko",
+                                        "maxLength": 50
+                                    },
+                                    "prezime": {
+                                        "type": "string",
+                                        "example": "Marković",
+                                        "maxLength": 50
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "marko@example.com",
+                                        "maxLength": 255
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "tajna123",
+                                        "minLength": 6
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "tajna123",
+                                        "minLength": 6
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registracija uspešna — verifikacioni email je poslat"
+                    },
+                    "422": {
+                        "description": "Validaciona greška (npr. email već postoji, lozinke se ne poklapaju)"
+                    }
+                }
+            }
+        },
+        "/api/galerija": {
+            "get": {
+                "tags": [
+                    "Galerija"
+                ],
+                "summary": "Vraća sve galerije",
+                "operationId": "e29a089797857c798825bbd8eedc16b0",
+                "responses": {
+                    "200": {
+                        "description": "Lista svih galerija"
+                    }
+                }
+            }
+        },
+        "/api/galerija/{id}": {
+            "get": {
+                "tags": [
+                    "Galerija"
+                ],
+                "summary": "Vraća jednu galeriju",
+                "operationId": "5824c2ea5633319e784f8ad0e98c49f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Galerija"
+                    },
+                    "404": {
+                        "description": "Galerija nije pronađena"
+                    }
+                }
+            }
+        },
+        "/api/popusti": {
+            "get": {
+                "tags": [
+                    "Popusti"
+                ],
+                "summary": "Vraća sve popuste",
+                "operationId": "65492d9ac96b3726e1bc4d29ebfdaaf2",
+                "responses": {
+                    "200": {
+                        "description": "Lista svih popusta"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Popusti"
+                ],
+                "summary": "Kreiranje novog popusta",
+                "description": "Kreira popust sa definisanim periodom važenja (dan/mesec od–do). Period ne sme biti duži od 31 dan. Podržani su popusti koji prelaze godišnju granicu (npr. 25.12 – 05.01).",
+                "operationId": "619e6912a97efdc5594ddac71e95473e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "aktivan",
+                                    "tip",
+                                    "procenat",
+                                    "danOd",
+                                    "mesecOd",
+                                    "danDo",
+                                    "mesecDo"
+                                ],
+                                "properties": {
+                                    "aktivan": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "tip": {
+                                        "type": "string",
+                                        "example": "praznik",
+                                        "maxLength": 50
+                                    },
+                                    "procenat": {
+                                        "type": "integer",
+                                        "example": 15,
+                                        "maximum": 100,
+                                        "minimum": 1
+                                    },
+                                    "danOd": {
+                                        "type": "integer",
+                                        "example": 24,
+                                        "maximum": 31,
+                                        "minimum": 1
+                                    },
+                                    "mesecOd": {
+                                        "type": "integer",
+                                        "example": 12,
+                                        "maximum": 12,
+                                        "minimum": 1
+                                    },
+                                    "danDo": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "maximum": 31,
+                                        "minimum": 1
+                                    },
+                                    "mesecDo": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "maximum": 12,
+                                        "minimum": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Popust kreiran"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "422": {
+                        "description": "Validaciona greška (npr. period duži od 31 dan ili neispravan datum)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/popusti-aktivni": {
+            "get": {
+                "tags": [
+                    "Popusti"
+                ],
+                "summary": "Vraća sve aktivne popuste",
+                "operationId": "11da2b8b48202a1364e2bd88d4336dbc",
+                "responses": {
+                    "200": {
+                        "description": "Lista aktivnih popusta"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/popusti/{id}": {
+            "get": {
+                "tags": [
+                    "Popusti"
+                ],
+                "summary": "Vraća jedan popust po ID-u",
+                "operationId": "1fe5e46d5cf77c68cf57ef83f78bac44",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Popust"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "404": {
+                        "description": "Popust nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Popusti"
+                ],
+                "summary": "Izmena popusta",
+                "description": "Sva polja su opciona. Ako se menja period (danOd/mesecOd/danDo/mesecDo), moraju se proslediti sva četiri datumska polja. Period ne sme biti duži od 31 dan.",
+                "operationId": "26cd038d50e0ffdd6d6832d2699e05e3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "aktivan": {
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "tip": {
+                                        "type": "string",
+                                        "example": "praznik",
+                                        "maxLength": 50
+                                    },
+                                    "procenat": {
+                                        "type": "integer",
+                                        "example": 20,
+                                        "maximum": 100,
+                                        "minimum": 1
+                                    },
+                                    "danOd": {
+                                        "type": "integer",
+                                        "example": 24,
+                                        "maximum": 31,
+                                        "minimum": 1
+                                    },
+                                    "mesecOd": {
+                                        "type": "integer",
+                                        "example": 12,
+                                        "maximum": 12,
+                                        "minimum": 1
+                                    },
+                                    "danDo": {
+                                        "type": "integer",
+                                        "example": 31,
+                                        "maximum": 31,
+                                        "minimum": 1
+                                    },
+                                    "mesecDo": {
+                                        "type": "integer",
+                                        "example": 12,
+                                        "maximum": 12,
+                                        "minimum": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Popust izmenjen"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "404": {
+                        "description": "Popust nije pronađen"
+                    },
+                    "422": {
+                        "description": "Validaciona greška (npr. nepotpuni datumski podaci ili period duži od 31 dan)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Popusti"
+                ],
+                "summary": "Brisanje popusta",
+                "operationId": "0aa7d6e4eea3deec86638d6adcfc693d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Popust obrisan"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "404": {
+                        "description": "Popust nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/porudzbine": {
+            "get": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Vraća sve porudžbine",
+                "operationId": "a56cdcd3db26acfb09fa0d89fb06fa2a",
+                "responses": {
+                    "200": {
+                        "description": "Lista porudžbina"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Kreiranje porudžbine za gosta",
+                "operationId": "aeac9cce4520f3d2cdf082946b1f5223",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ime",
+                                    "prezime",
+                                    "grad",
+                                    "adresa",
+                                    "postanski_broj",
+                                    "telefon",
+                                    "stavke"
+                                ],
+                                "properties": {
+                                    "ime": {
+                                        "type": "string"
+                                    },
+                                    "prezime": {
+                                        "type": "string"
+                                    },
+                                    "grad": {
+                                        "type": "string"
+                                    },
+                                    "adresa": {
+                                        "type": "string"
+                                    },
+                                    "postanski_broj": {
+                                        "type": "string"
+                                    },
+                                    "telefon": {
+                                        "type": "string"
+                                    },
+                                    "stavke": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "slika_id": {
+                                                    "type": "integer"
+                                                },
+                                                "kolicina": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Porudžbina kreirana"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    },
+                    "500": {
+                        "description": "Greška pri kreiranju"
+                    }
+                }
+            }
+        },
+        "/api/porudzbine-pag": {
+            "get": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Vraća sve porudžbine uz paginaciju",
+                "operationId": "b9ca44eccc95b6f385f1f342b45d7a1b",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Broj stavki po stranici (podrazumevano 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginirana lista porudžbina"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/porudzbine-clan": {
+            "post": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Kreiranje porudžbine za ulogovanog korisnika",
+                "description": "Ulogovani korisnik automatski dobija 10% popusta, osim ako postoji aktivan prazničan popust veći od 10%.",
+                "operationId": "5279bb6988dcc6b78dd699bb984ed9d6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ime",
+                                    "prezime",
+                                    "grad",
+                                    "adresa",
+                                    "postanski_broj",
+                                    "telefon",
+                                    "stavke"
+                                ],
+                                "properties": {
+                                    "ime": {
+                                        "type": "string"
+                                    },
+                                    "prezime": {
+                                        "type": "string"
+                                    },
+                                    "grad": {
+                                        "type": "string"
+                                    },
+                                    "adresa": {
+                                        "type": "string"
+                                    },
+                                    "postanski_broj": {
+                                        "type": "string"
+                                    },
+                                    "telefon": {
+                                        "type": "string"
+                                    },
+                                    "stavke": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "slika_id": {
+                                                    "type": "integer"
+                                                },
+                                                "kolicina": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Porudžbina kreirana"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    },
+                    "500": {
+                        "description": "Greška pri kreiranju"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/porudzbine/{id}": {
+            "get": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Vraća jednu porudžbinu",
+                "operationId": "0478179f740d6c405f9a4fbdc208eb57",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Porudžbina"
+                    },
+                    "404": {
+                        "description": "Porudžbina nije pronađena"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Izmena porudžbine",
+                "operationId": "e86b3fc61f9b80cbf0317656781bf8dd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "popust_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "datum": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "ime": {
+                                        "type": "string"
+                                    },
+                                    "prezime": {
+                                        "type": "string"
+                                    },
+                                    "grad": {
+                                        "type": "string"
+                                    },
+                                    "adresa": {
+                                        "type": "string"
+                                    },
+                                    "postanski_broj": {
+                                        "type": "string"
+                                    },
+                                    "telefon": {
+                                        "type": "string"
+                                    },
+                                    "poslato": {
+                                        "type": "boolean"
+                                    },
+                                    "stavke": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "slika_id": {
+                                                    "type": "integer"
+                                                },
+                                                "kolicina": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Porudžbina izmenjena"
+                    },
+                    "400": {
+                        "description": "Nema podataka za izmenu"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "404": {
+                        "description": "Porudžbina nije pronađena"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    },
+                    "500": {
+                        "description": "Greška pri izmeni"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Brisanje porudžbine",
+                "operationId": "d656bdf2cd8716b84017a03e4e36c587",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Porudžbina obrisana"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "404": {
+                        "description": "Porudžbina nije pronađena"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/porudzbine/kupac/{userId}": {
+            "get": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Vraća sve porudžbine određenog kupca",
+                "operationId": "f0523eb7dd43dd54314cf3e91f760bdc",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista porudžbina kupca"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "404": {
+                        "description": "Korisnik nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/porudzbine/moje": {
+            "get": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Porudžbine ulogovanog korisnika",
+                "operationId": "87a136f404d1351dee5f8d76d3fdb8d8",
+                "responses": {
+                    "200": {
+                        "description": "Lista porudžbina ulogovanog korisnika"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/porudzbine/export-csv": {
+            "get": {
+                "tags": [
+                    "Porudzbine"
+                ],
+                "summary": "Eksport svih porudžbina u CSV format",
+                "description": "Preuzima CSV fajl sa svim porudžbinama, sortiranim po statusu slanja i datumu. Fajl je UTF-8 enkodovan sa BOM-om radi kompatibilnosti sa Excel-om.",
+                "operationId": "159ffbeebdff894ef07c5bfdf7faaabc",
+                "responses": {
+                    "200": {
+                        "description": "CSV fajl sa porudžbinama",
+                        "headers": {
+                            "Content-Disposition": {
+                                "description": "Attachment sa generisanim imenom fajla",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Content-Type": {
+                                "description": "MIME tip fajla",
+                                "schema": {
+                                    "type": "string",
+                                    "default": "text/csv; charset=UTF-8"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mesecniBrojPorudzbina": {
+            "get": {
+                "tags": [
+                    "Admin/Slikar statistika"
+                ],
+                "summary": "Broj porudžbina po mesecima (poslednjih 12 meseci)",
+                "operationId": "53dbf9edb43bdefabd0f7402e8afa5fe",
+                "responses": {
+                    "200": {
+                        "description": "Lista porudžbina po mesecima"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/slike": {
+            "get": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Vraća sve slike",
+                "operationId": "e819b402d6525e8e5db0ce16239ca1dc",
+                "responses": {
+                    "200": {
+                        "description": "Lista slika"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Dodavanje nove slike",
+                "operationId": "582832efe61d7ba00bfd7dc770880bf3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "naziv",
+                                    "cena",
+                                    "visina_cm",
+                                    "sirina_cm",
+                                    "dostupna",
+                                    "tehnike"
+                                ],
+                                "properties": {
+                                    "naziv": {
+                                        "type": "string",
+                                        "example": "Sunset"
+                                    },
+                                    "cena": {
+                                        "type": "number",
+                                        "example": 15000
+                                    },
+                                    "visina_cm": {
+                                        "type": "number",
+                                        "example": 50
+                                    },
+                                    "sirina_cm": {
+                                        "type": "number",
+                                        "example": 70
+                                    },
+                                    "dostupna": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "galerija_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "putanja_fotografije": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "tehnike": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Slika kreirana"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/slike/latest": {
+            "get": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Vraća 3 najnovije dostupne slike",
+                "operationId": "61fe5ee1c6c95b53064dd731f5bb85be",
+                "responses": {
+                    "200": {
+                        "description": "Lista najnovijih slika"
+                    }
+                }
+            }
+        },
+        "/api/slike/filter": {
+            "get": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Vraća paginirane i filtrirane slike",
+                "operationId": "73f73818d7a25196ccfddf583443efaa",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 20,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "dostupna",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "cena_min",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "cena_max",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "visina_cm_min",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "visina_cm_max",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "sirina_cm_min",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "sirina_cm_max",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "sort_cena",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_starost",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tehnike[]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginirana lista slika"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        },
+        "/api/slike/{id}": {
+            "get": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Vraća jednu sliku",
+                "operationId": "91694b9773fbd6702535c7158b843051",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slika"
+                    },
+                    "404": {
+                        "description": "Slika nije pronađena"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Ažurira sliku (koristi POST + _method=PUT zbog multipart/form-data)",
+                "operationId": "d1fffc73b647e40a70d39925a24da75f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "_method": {
+                                        "type": "string",
+                                        "example": "PUT"
+                                    },
+                                    "galerija_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "putanja_fotografije": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "cena": {
+                                        "type": "number",
+                                        "example": 200
+                                    },
+                                    "naziv": {
+                                        "type": "string",
+                                        "example": "Jutarnji pejzaž"
+                                    },
+                                    "visina_cm": {
+                                        "type": "number",
+                                        "example": 60
+                                    },
+                                    "sirina_cm": {
+                                        "type": "number",
+                                        "example": 80
+                                    },
+                                    "dostupna": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "tehnike": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Slika ažurirana"
+                    },
+                    "400": {
+                        "description": "Nema podataka za izmenu"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Slike"
+                ],
+                "summary": "Briše sliku",
+                "operationId": "3352072bc66871fd068f669fdfa579f9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slika obrisana"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    },
+                    "404": {
+                        "description": "Slika nije pronađena"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/tehnike": {
+            "get": {
+                "tags": [
+                    "Tehnike"
+                ],
+                "summary": "Vraća sve tehnike",
+                "operationId": "c21a471aae53ba8124b6b418673bb77f",
+                "responses": {
+                    "200": {
+                        "description": "Lista tehnika"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tehnike"
+                ],
+                "summary": "Kreira novu tehniku",
+                "operationId": "1a8aa5e0eb95f088b18408d35f1a150b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "naziv"
+                                ],
+                                "properties": {
+                                    "naziv": {
+                                        "type": "string",
+                                        "example": "Akvarel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tehnika kreirana"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/tehnike/{id}": {
+            "get": {
+                "tags": [
+                    "Tehnike"
+                ],
+                "summary": "Vraća jednu tehniku",
+                "operationId": "acd85dd7c617ae85777b55c6c109167f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tehnika"
+                    },
+                    "404": {
+                        "description": "Tehnika nije pronađena"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tehnike"
+                ],
+                "summary": "Ažurira tehniku",
+                "operationId": "8f527a59a08fbaddff0a48766bb2ce1b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "naziv": {
+                                        "type": "string",
+                                        "example": "Akvarel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tehnika ažurirana"
+                    },
+                    "400": {
+                        "description": "Nema podataka za izmenu"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tehnike"
+                ],
+                "summary": "Briše tehniku",
+                "operationId": "b63e2375dd04d068b97423b86dbfaa36",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tehnika obrisana"
+                    },
+                    "401": {
+                        "description": "Neautorizovan"
+                    },
+                    "403": {
+                        "description": "Zabranjen pristup"
+                    },
+                    "422": {
+                        "description": "Tehnika se koristi na slikama"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/poruka-korisnika": {
+            "post": {
+                "tags": [
+                    "User message"
+                ],
+                "summary": "Korisnik šalje poruku privilegovanim korisnicima putem mejla",
+                "operationId": "e0ea0099d759665974cd98a9f0c6a075",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ime",
+                                    "email",
+                                    "poruka"
+                                ],
+                                "properties": {
+                                    "ime": {
+                                        "type": "string",
+                                        "example": "Marko"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "marko@gmail.com"
+                                    },
+                                    "poruka": {
+                                        "type": "string",
+                                        "example": "Da li mogu da vidim sliku uživo?"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Poruka uspešno poslata"
+                    },
+                    "422": {
+                        "description": "Validaciona greška"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autentifikacija",
+            "description": "Autentifikacija"
+        },
+        {
+            "name": "Galerija",
+            "description": "Galerija"
+        },
+        {
+            "name": "Popusti",
+            "description": "Popusti"
+        },
+        {
+            "name": "Porudzbine",
+            "description": "Porudzbine"
+        },
+        {
+            "name": "Admin/Slikar statistika",
+            "description": "Admin/Slikar statistika"
+        },
+        {
+            "name": "Slike",
+            "description": "Slike"
+        },
+        {
+            "name": "Tehnike",
+            "description": "Tehnike"
+        },
+        {
+            "name": "User message",
+            "description": "User message"
+        }
+    ]
+}

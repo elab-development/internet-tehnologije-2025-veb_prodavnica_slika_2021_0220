@@ -8,8 +8,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+use OpenApi\Attributes as OA;
+
 class UserMessageController extends Controller
 {
+    #[OA\Post(
+        path: '/api/poruka-korisnika',
+        summary: 'Korisnik šalje poruku privilegovanim korisnicima putem mejla',
+        tags: ['User message'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['ime','email','poruka'],
+                    properties: [
+                        new OA\Property(property: 'ime', type: 'string', example: 'Marko'),
+                        new OA\Property(property: 'email', type: 'string', example: 'marko@gmail.com'),
+                        new OA\Property(property: 'poruka', type: 'string', example: 'Da li mogu da vidim sliku uživo?'),
+                    ],
+                    type: 'object'
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200,description: 'Poruka uspešno poslata'),
+            new OA\Response(response: 422,description: 'Validaciona greška')
+        ]
+    )]
+    // ['']  \  @
     public function proslediPoruku(Request $request){
 
         $validator=Validator::make($request->all(),[

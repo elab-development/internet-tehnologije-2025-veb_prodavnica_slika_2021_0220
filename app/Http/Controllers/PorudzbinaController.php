@@ -19,18 +19,45 @@ use Illuminate\Support\Facades\Validator;
 
 use function Pest\Laravel\options;
 
+use OpenApi\Attributes as OA;
+
 class PorudzbinaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    #[OA\Get(
+        path: '/api/porudzbine',
+        summary: 'Vraća sve porudžbine',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista porudžbina'),
+            new OA\Response(response: 401, description: 'Neautorizovan')
+        ]
+    )]
     public function index()
     {
         $porudzbine=Porudzbina::with(['user','stavke.slika','popust'])->get();
         return response()->json(PorudzbinaResource::collection($porudzbine),200);
     }
 
-    
+    #[OA\Get(
+        path: '/api/porudzbine-pag',
+        summary: 'Vraća sve porudžbine uz paginaciju',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'per_page',
+                in: 'query',
+                required: false,
+                description: 'Broj stavki po stranici (podrazumevano 10)',
+                schema: new OA\Schema(type: 'integer', default: 10)
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Paginirana lista porudžbina'),
+            new OA\Response(response: 401, description: 'Neautorizovan')
+        ]
+    )]
     public function allOrdersPaginated(Request $request)
     {
         $perPage=$request->get('per_page',10);
@@ -53,9 +80,43 @@ class PorudzbinaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    #[OA\Post(
+        path: '/api/porudzbine',
+        summary: 'Kreiranje porudžbine za gosta',
+        tags: ['Porudzbine'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['ime','prezime','grad','adresa','postanski_broj','telefon','stavke'],
+                    properties: [
+                        new OA\Property(property: 'ime', type: 'string'),
+                        new OA\Property(property: 'prezime', type: 'string'),
+                        new OA\Property(property: 'grad', type: 'string'),
+                        new OA\Property(property: 'adresa', type: 'string'),
+                        new OA\Property(property: 'postanski_broj', type: 'string'),
+                        new OA\Property(property: 'telefon', type: 'string'),
+                        new OA\Property(
+                            property: 'stavke',
+                            type: 'array',
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'slika_id', type: 'integer'),
+                                    new OA\Property(property: 'kolicina', type: 'integer')
+                                ]
+                            )
+                        )
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Porudžbina kreirana'),
+            new OA\Response(response: 422, description: 'Validaciona greška'),
+            new OA\Response(response: 500, description: 'Greška pri kreiranju')
+        ]
+    )]
     public function storeGost(Request $request)
     {
         //izostavljena drzava jer ce se za sada podrazumevati Srbija, i ukupnaCena jer nju mi racunamo, i rb stavki isto mi postavljamo, i status tj polje poslato (false), i danasnji datum sami unosimo
@@ -217,7 +278,46 @@ class PorudzbinaController extends Controller
         }
     }
 
-
+    #[OA\Post(
+        path: '/api/porudzbine-clan',
+        summary: 'Kreiranje porudžbine za ulogovanog korisnika',
+        description: 'Ulogovani korisnik automatski dobija 10% popusta, osim ako postoji aktivan prazničan popust veći od 10%.',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    required: ['ime','prezime','grad','adresa','postanski_broj','telefon','stavke'],
+                    properties: [
+                        new OA\Property(property: 'ime', type: 'string'),
+                        new OA\Property(property: 'prezime', type: 'string'),
+                        new OA\Property(property: 'grad', type: 'string'),
+                        new OA\Property(property: 'adresa', type: 'string'),
+                        new OA\Property(property: 'postanski_broj', type: 'string'),
+                        new OA\Property(property: 'telefon', type: 'string'),
+                        new OA\Property(
+                            property: 'stavke',
+                            type: 'array',
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'slika_id', type: 'integer'),
+                                    new OA\Property(property: 'kolicina', type: 'integer')
+                                ]
+                            )
+                        )
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Porudžbina kreirana'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 422, description: 'Validaciona greška'),
+            new OA\Response(response: 500, description: 'Greška pri kreiranju')
+        ]
+    )]
     public function storeUlogovani(Request $request)
     {
         //izostavljena drzava jer ce se za sada podrazumevati Srbija, i ukupnaCena jer nju mi racunamo, i rb stavki isto mi postavljamo, i status tj polje poslato (false), i danasnji datum sami unosimo
@@ -396,9 +496,19 @@ class PorudzbinaController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
+    #[OA\Get(
+        path: '/api/porudzbine/{id}',
+        summary: 'Vraća jednu porudžbinu',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Porudžbina'),
+            new OA\Response(response: 404, description: 'Porudžbina nije pronađena')
+        ]
+    )]
     public function show($id)
     {
         $porudzbina=Porudzbina::with(['popust','user','stavke.slika'])->findOrFail($id);
@@ -413,9 +523,53 @@ class PorudzbinaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Put(
+        path: '/api/porudzbine/{id}',
+        summary: 'Izmena porudžbine',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        requestBody: new OA\RequestBody(
+            required: false,
+            content: new OA\MediaType(
+                mediaType: 'application/json',
+                schema: new OA\Schema(
+                    properties: [
+                        new OA\Property(property: 'user_id', type: 'integer', nullable: true),
+                        new OA\Property(property: 'popust_id', type: 'integer', nullable: true),
+                        new OA\Property(property: 'datum', type: 'string', format: 'date'),
+                        new OA\Property(property: 'ime', type: 'string'),
+                        new OA\Property(property: 'prezime', type: 'string'),
+                        new OA\Property(property: 'grad', type: 'string'),
+                        new OA\Property(property: 'adresa', type: 'string'),
+                        new OA\Property(property: 'postanski_broj', type: 'string'),
+                        new OA\Property(property: 'telefon', type: 'string'),
+                        new OA\Property(property: 'poslato', type: 'boolean'),
+                        new OA\Property(
+                            property: 'stavke',
+                            type: 'array',
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'slika_id', type: 'integer'),
+                                    new OA\Property(property: 'kolicina', type: 'integer')
+                                ]
+                            )
+                        )
+                    ]
+                )
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Porudžbina izmenjena'),
+            new OA\Response(response: 400, description: 'Nema podataka za izmenu'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 404, description: 'Porudžbina nije pronađena'),
+            new OA\Response(response: 422, description: 'Validaciona greška'),
+            new OA\Response(response: 500, description: 'Greška pri izmeni')
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $porudzbina=Porudzbina::findOrFail($id);
@@ -531,9 +685,20 @@ class PorudzbinaController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[OA\Delete(
+        path: '/api/porudzbine/{id}',
+        summary: 'Brisanje porudžbine',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Porudžbina obrisana'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 404, description: 'Porudžbina nije pronađena')
+        ]
+    )]
     public function destroy($id)                 //KADA BUDES IMPLEMENTIRAO I OVO dodaj da se slike koje su bile deo izbrisane porudybine opet postave na dostupna:true
     {
         $porudzbina=Porudzbina::findOrFail($id);
@@ -545,12 +710,36 @@ class PorudzbinaController extends Controller
         return response()->json(['message'=>'Porudzbina je obrisana.'],200);
     }
 
+    #[OA\Get(
+        path: '/api/porudzbine/kupac/{userId}',
+        summary: 'Vraća sve porudžbine određenog kupca',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'userId', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista porudžbina kupca'),
+            new OA\Response(response: 401, description: 'Neautorizovan'),
+            new OA\Response(response: 404, description: 'Korisnik nije pronađen')
+        ]
+    )]
     public function vratiSvePorudzbineKupca($userId){
         $user=User::findOrFail($userId);
         $porudzbine=$user->porudzbine()->with(['stavke.slika','popust'])->get();
         return response()->json(PorudzbinaResource::collection($porudzbine),200);
     }
 
+    #[OA\Get(
+        path: '/api/porudzbine/moje',
+        summary: 'Porudžbine ulogovanog korisnika',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Lista porudžbina ulogovanog korisnika'),
+            new OA\Response(response: 401, description: 'Neautorizovan')
+        ]
+    )]
     public function moje(Request $request){
 
         $userId=$request->user()->id;
@@ -562,7 +751,32 @@ class PorudzbinaController extends Controller
         return response()->json(PorudzbinaResource::collection($porudzbine),200);
     }
 
-
+    #[OA\Get(
+        path: '/api/porudzbine/export-csv',
+        summary: 'Eksport svih porudžbina u CSV format',
+        description: 'Preuzima CSV fajl sa svim porudžbinama, sortiranim po statusu slanja i datumu. Fajl je UTF-8 enkodovan sa BOM-om radi kompatibilnosti sa Excel-om.',
+        tags: ['Porudzbine'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'CSV fajl sa porudžbinama',
+                headers: [
+                    new OA\Header(
+                        header: 'Content-Disposition',
+                        description: 'Attachment sa generisanim imenom fajla',
+                        schema: new OA\Schema(type: 'string')
+                    ),
+                    new OA\Header(
+                        header: 'Content-Type',
+                        description: 'MIME tip fajla',
+                        schema: new OA\Schema(type: 'string', default: 'text/csv; charset=UTF-8')
+                    )
+                ]
+            ),
+            new OA\Response(response: 401, description: 'Neautorizovan')
+        ]
+    )]
     public function exportCsv(Request $request) 
     {
         // ako kasnije dodaš role

@@ -122,6 +122,9 @@ Route::middleware(['auth:sanctum','role:admin,slikar'])->group(function(){
     // Route::post('/slike', [SlikaController::class, 'store']);
     Route::post('/slike',[PrivilegedUserController::class,'dodajSliku']);
     Route::post('/slike/{id}', [SlikaController::class, 'update']);
+    //^ovde smo stavili POST i simuliramo put tako sto prosledimo _method = PUT kao parametar u form-data
+    //to je neophodno jer PUT ne prepoznaje podatke iz form-data nego samo raw
+    //koristimo form-data kao bismo omogucili pravilno izvrsenje upload-a fotografije
     Route::delete('/slike/{id}', [SlikaController::class, 'destroy']);
 
     // tehnike
