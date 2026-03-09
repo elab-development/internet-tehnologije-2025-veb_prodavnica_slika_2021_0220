@@ -215,7 +215,8 @@ const AnalizaPoslovanja = () => {
                                                                   //spread operator (...) koristimo kako bi raspakovali niz koji map pravi:
                                                                   // Math.max([0, 1, 3])  // NaN - ne radi!
                                                                   // Math.max(0, 1, 3)    // 3 - radi!
-
+                                                                  
+                                                                  
       const options = {         //ovu hardcore stilizaciju gpt radi iskljucivo
         legend: { position: 'none' },
         backgroundColor: 'transparent',
@@ -232,7 +233,7 @@ const AnalizaPoslovanja = () => {
           gridlines: { color: '#f0f0f0', count: 5 },
           baselineColor: '#f0f0f0',
           minValue: 0,
-          viewWindow: { min: maxVrednost<=10 ? -0.9 : -5 },
+          viewWindow: { min: maxVrednost<=10 ? (maxVrednost<=2 ? 0 : -0.9) : -5 },
         },
         lineWidth: isMobile ? 2 : 2.5,
         colors: ['#7a1528'],
