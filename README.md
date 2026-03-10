@@ -23,7 +23,7 @@ Veb aplikacija za prodaju umetničkih slika razvijena kao seminarski rad.
 - **Mailtrap** — email sandbox za testiranje
 - **Cloudinary** — cloud skladištenje slika
 - **L5-Swagger** — automatska API dokumentacija
-- **PHPUnit (Pest)** — testiranje
+- **Pest** — testiranje
 
 ### Frontend
 - **React 18** (Create React App)
@@ -162,8 +162,8 @@ docker compose exec backend php artisan migrate --seed
 
 | Servis | URL |
 |---|---|
-| Frontend | https://web-shop-fullstack.onrender.com |
-| Backend API | https://webshop-backend-yw92.onrender.com/api |
+| Frontend | https://danyart.onrender.com |
+| Backend API | https://internet-tehnologije-backend.onrender.com/api |
 
 ---
 

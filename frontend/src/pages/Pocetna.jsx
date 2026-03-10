@@ -132,7 +132,9 @@ const Pocetna = ({onRegister,isAuth,addToCart,removeFromCart, cartItems,isPrivil
           tehnike: slika.tehnike.map((t) => t.naziv).join(', '), // Tehnika kao string
           cena: `${slika.cena} RSD`,
           dostupna: slika.dostupna,
-          fotografija: slika.putanja_fotografije.startsWith('http') ? slika.putanja_fotografije : `http://localhost:8000/storage/${slika.putanja_fotografije}`, // Laravel storage URL
+          fotografija: slika.putanja_fotografije.startsWith('http') 
+                        ? slika.putanja_fotografije 
+                        : `${process.env.REACT_APP_API_URL?.replace('/api','')}/storage/${slika.putanja_fotografije}`, //REACT_APP_API_URL? (? na kraju sluzi da kod ne pukne ako REACT_APP_API_URL ne postoji nego da vrati undefined)
         }));
         
         setLatestPaintings(paintings);

@@ -25,4 +25,4 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-avail
 
 # CMD bash -c "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
 
-CMD bash -c "php artisan migrate --force && apache2-foreground"
+CMD bash -c "php artisan migrate --force && php artisan storage:link && apache2-foreground"
